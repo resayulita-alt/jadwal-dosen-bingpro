@@ -296,19 +296,21 @@ function loadFromSheet(){
         else cur+=ch;
       }
       cols.push(cur.trim());
-      if(cols.length<5||!cols[2]) continue;
-      var time=cols[3]||'';
-      time=time.replace(/\./g,':');
+      if(cols.length<5) continue;
+      var time=(cols[3]||'').trim().replace(/\./g,':');
+      var hari=(cols[2]||'').trim();
+      var mk=(cols[4]||'').trim();
+      if(!hari||!mk) continue;
       newData.push({
-        day:cols[2]||'',
+        day:hari,
         time:time,
-        mk:cols[4]||'',
+        mk:mk,
         sks:parseInt(cols[5])||0,
-        prodi:cols[6]||'',
-        kelas:cols[7]||'-',
-        dosen:cols[1]||'',
-        ruang:cols[8]||'',
-        minggu:cols[9]||'16'
+        prodi:(cols[6]||'').trim(),
+        kelas:(cols[7]||'-').trim(),
+        dosen:(cols[1]||'').trim(),
+        ruang:(cols[8]||'').trim(),
+        minggu:(cols[9]||'16').trim()
       });
     }
     if(newData.length>0){
