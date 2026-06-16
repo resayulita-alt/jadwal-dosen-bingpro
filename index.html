@@ -229,7 +229,15 @@ let currentView = 'weekly';
 let weekOffset = 0;
 
 // Built-in data (fallback) - empty, dosen input via form
-const builtInData = [];
+// Built-in data from form submissions (auto-synced)
+const builtInData = [
+{day:'Rabu',time:'13.30-15.10',mk:'Semhas Jafri',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
+{day:'Rabu',time:'10.50-12.30',mk:'Semhas Najwa',sks:2,prodi:'TPTP',kelas:'B',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
+{day:'Rabu',time:'15.15-16.45',mk:'Semhas NINDA',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
+{day:'Kamis',time:'09.05-10.55',mk:'Semhas SEPTIAN',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
+{day:'Kamis',time:'13.30-15.10',mk:'Semhas Rani',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
+{day:'Jumat',time:'13.30-15.10',mk:'Rapat Kurikulum',sks:2,prodi:'BIKBP',kelas:'-',dosen:'Resa Yulita',ruang:'Ruang Prodi BINGPRO',minggu:'16'},
+];
 
 function getWeekDates(offset) {
 const now = new Date();
