@@ -495,21 +495,43 @@ renderAll();
 // Load from Google Sheet (manual + form responses)
 const SHEET_URL_FORM = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Form+Responses+1`;
 
-async function loadFromSheet() {
+function loadFromSheet() {
+return new Promise((resolve) => {
 let allData = [];
-try {
-const resp = await fetch(SHEET_URL);
-if (!resp.ok) throw new Error('Fetch failed');
-const csv = await resp.text();
+let loaded = 0;
+const total = 2;
+
+function checkDone() {
+loaded++;
+if (loaded >= total) {
+if (allData.length > 0) {
+const seen = new Set();
+schedules = allData.filter(s => {
+const key = s.day + '|' + s.time + '|' + s.dosen + '|' + s.kelas + '|' + s.prodi;
+if (seen.has(key)) return false;
+seen.add(key);
+return true;
+});
+document.getElementById('sheetStatus').textContent = '📊 Data dari Google Sheet (live)';
+document.getElementById('sheetStatus').classList.add('live');
+resolve(true);
+} else {
+resolve(false);
+}
+}
+}
+
+function parseCSV(csv) {
 const rows = csv.split('\n').filter(r => r.trim());
-if (rows.length >= 2) {
+if (rows.length < 2) return [];
 const headers = parseCSVRow(rows[0]).map(h => h.toLowerCase().trim());
+const result = [];
 for (let i = 1; i < rows.length; i++) {
 const cols = parseCSVRow(rows[i]);
 if (cols.length < 4 || !cols[0]) continue;
 const obj = {};
 headers.forEach((h, idx) => { obj[h] = (cols[idx] || '').trim(); });
-allData.push({
+result.push({
 day: obj.hari || obj.day || '',
 time: obj.jam || obj.time || '',
 mk: obj.mk || obj['mata kuliah'] || obj.matkul || '',
@@ -521,54 +543,33 @@ ruang: obj.ruang || obj.ruangan || '',
 minggu: obj.minggu || obj.week || '1-16'
 });
 }
+return result;
 }
-} catch(e) {
+
+// Fetch manual sheet
+fetch(SHEET_URL).then(r => r.text()).then(csv => {
+allData.push(...parseCSV(csv));
+checkDone();
+}).catch(e => {
 console.log('Manual sheet error: ' + e.message);
-}
-// Also load from Form Responses
-try {
-const resp2 = await fetch(SHEET_URL_FORM);
-if (resp2.ok) {
-const csv2 = await resp2.text();
-const rows2 = csv2.split('\n').filter(r => r.trim());
-if (rows2.length >= 2) {
-const headers2 = parseCSVRow(rows2[0]).map(h => h.toLowerCase().trim());
-for (let i = 1; i < rows2.length; i++) {
-const cols = parseCSVRow(rows2[i]);
-if (cols.length < 4 || !cols[0]) continue;
-const obj = {};
-headers2.forEach((h, idx) => { obj[h] = (cols[idx] || '').trim(); });
-allData.push({
-day: obj.hari || obj.day || '',
-time: obj['jam mengajar'] || obj.jam || obj.time || '',
-mk: obj['mata kuliah'] || obj.mk || obj.matkul || '',
-sks: parseInt(obj.sks) || 0,
-prodi: obj.prodi || '',
-kelas: obj.kelas || '-',
-dosen: obj['nama dosen'] || obj.dosen || '',
-ruang: obj['ruang kelas'] || obj.ruang || obj.ruangan || '',
-minggu: obj['minggu mengajar'] || obj.minggu || obj.week || '1-16'
+checkDone();
 });
-}
-}
-}
-} catch(e) {
-console.log('Form responses sheet error: ' + e.message);
-}
-if (allData.length > 0) {
-// Remove duplicates
-const seen = new Set();
-schedules = allData.filter(s => {
-const key = s.day + '|' + s.time + '|' + s.dosen + '|' + s.kelas + '|' + s.prodi;
-if (seen.has(key)) return false;
-seen.add(key);
-return true;
+
+// Fetch form responses
+fetch(SHEET_URL_FORM).then(r => r.text()).then(csv => {
+const formData = parseCSV(csv).map(s => ({
+...s,
+time: s.time || '',
+mk: s.mk || '',
+dosen: s.dosen || '',
+}));
+allData.push(...formData);
+checkDone();
+}).catch(e => {
+console.log('Form sheet error: ' + e.message);
+checkDone();
 });
-document.getElementById('sheetStatus').textContent = '📊 Data dari Google Sheet (live)';
-document.getElementById('sheetStatus').classList.add('live');
-return true;
-}
-return false;
+});
 }
 
 function parseCSVRow(row) {
@@ -596,16 +597,17 @@ schedules = builtInData;
 updateWeekLabel();
 renderAll();
 
-try {
-const fromSheet = await loadFromSheet();
+loadFromSheet().then(fromSheet => {
 if(fromSheet) {
 updateWeekLabel();
 renderAll();
+} else {
+document.getElementById('sheetStatus').textContent = '📊 Belum ada data';
 }
-} catch(e) {
+}).catch(e => {
 console.log('Sheet load error: ' + e.message);
 document.getElementById('sheetStatus').textContent = '📊 Data bawaan (offline)';
-}
+});
 }
 init();
 </script>
