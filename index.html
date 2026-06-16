@@ -228,32 +228,8 @@ let currentFilter = 'all';
 let currentView = 'weekly';
 let weekOffset = 0;
 
-// Built-in data (fallback)
-const builtInData = [
-{day:'Selasa',time:'08:00-09:30',mk:'Bahasa Inggris 2',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R13',minggu:'1-16'},
-{day:'Selasa',time:'09:30-11:00',mk:'Bahasa Inggris 2',sks:2,prodi:'TPTP',kelas:'B',dosen:'Resa Yulita',ruang:'R13',minggu:'1-16'},
-{day:'Selasa',time:'11:00-12:30',mk:'Seminar Hasil',sks:1,prodi:'TPTP',kelas:'-',dosen:'Resa Yulita',ruang:'R14',minggu:'1-16'},
-{day:'Kamis',time:'08:00-09:30',mk:'Bahasa Inggris 2',sks:2,prodi:'TPTP',kelas:'B',dosen:'Resa Yulita',ruang:'R46',minggu:'1-16'},
-{day:'Kamis',time:'09:30-11:00',mk:'Seminar Hasil',sks:1,prodi:'TPTP',kelas:'-',dosen:'Resa Yulita',ruang:'R14',minggu:'1-16'},
-{day:'Kamis',time:'13:00-14:30',mk:'Bahasa Inggris 2',sks:2,prodi:'TPTP',kelas:'C',dosen:'Resa Yulita',ruang:'R17',minggu:'1-16'},
-{day:'Jumat',time:'08:00-09:30',mk:'Bahasa Inggris 2',sks:2,prodi:'BIKBP',kelas:'A',dosen:'Resa Yulita',ruang:'Online',minggu:'1-16'},
-
-{day:'Senin',time:'08:00-09:30',mk:'Bahasa Inggris 1',sks:2,prodi:'Agribisnis',kelas:'A',dosen:'Meriyan Elza',ruang:'R12',minggu:'1-16'},
-{day:'Senin',time:'09:30-11:00',mk:'Bahasa Inggris 1',sks:2,prodi:'Agribisnis',kelas:'B',dosen:'Meriyan Elza',ruang:'R12',minggu:'1-16'},
-{day:'Selasa',time:'13:00-14:30',mk:'Bahasa Inggris 2',sks:2,prodi:'Hortikultura',kelas:'A',dosen:'Meriyan Elza',ruang:'R15',minggu:'1-16'},
-
-{day:'Senin',time:'11:00-12:30',mk:'Bahasa Inggris 1',sks:2,prodi:'TRK',kelas:'A',dosen:'Yuliandri',ruang:'R10',minggu:'1-16'},
-{day:'Rabu',time:'08:00-09:30',mk:'Bahasa Inggris 2',sks:2,prodi:'BIKBP',kelas:'B',dosen:'Yuliandri',ruang:'R20',minggu:'1-16'},
-{day:'Rabu',time:'09:30-11:00',mk:'Bahasa Inggris 2',sks:2,prodi:'Hortikultura',kelas:'B',dosen:'Yuliandri',ruang:'R20',minggu:'1-16'},
-
-{day:'Selasa',time:'08:00-09:30',mk:'Bahasa Inggris 1',sks:2,prodi:'BIKBP',kelas:'A',dosen:'Hudia',ruang:'R11',minggu:'1-16'},
-{day:'Kamis',time:'08:00-09:30',mk:'Bahasa Inggris 1',sks:2,prodi:'BIKBP',kelas:'B',dosen:'Hudia',ruang:'R11',minggu:'1-16'},
-{day:'Kamis',time:'11:00-12:30',mk:'Bahasa Inggris 1',sks:2,prodi:'Hortikultura',kelas:'A',dosen:'Hudia',ruang:'R16',minggu:'1-16'},
-
-{day:'Rabu',time:'13:00-14:30',mk:'Bahasa Inggris 1',sks:2,prodi:'TRK',kelas:'B',dosen:'Widya Febrina',ruang:'R22',minggu:'1-16'},
-{day:'Jumat',time:'09:30-11:00',mk:'Bahasa Inggris 2',sks:2,prodi:'TRK',kelas:'A',dosen:'Widya Febrina',ruang:'R22',minggu:'1-16'},
-{day:'Jumat',time:'11:00-12:30',mk:'Bahasa Inggris 2',sks:2,prodi:'TRK',kelas:'B',dosen:'Widya Febrina',ruang:'R22',minggu:'1-16'},
-];
+// Built-in data (fallback) - empty, dosen input via form
+const builtInData = [];
 
 function getWeekDates(offset) {
 const now = new Date();
