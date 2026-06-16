@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Jadwal Dosen BINGPRO</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e2e8f0}
+
+/* HEADER */
+.header{background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:20px 16px 16px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.header h1{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:2px}
+.header p{font-size:0.72rem;color:#93c5fd}
+.badge-row{display:flex;justify-content:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:20px;font-size:0.65rem;color:#dbeafe}
+.badge.live{background:rgba(34,197,94,0.25);color:#86efac}
+
+/* NAV TABS */
+.nav-tabs{display:flex;background:#111827;border-bottom:1px solid #1e293b;overflow-x:auto;position:sticky;top:88px;z-index:99}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{flex:1;padding:12px 8px;text-align:center;font-size:0.72rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:0.2s}
+.nav-tab.active{color:#60a5fa;border-bottom-color:#60a5fa;background:rgba(96,165,250,0.05)}
+.nav-tab:hover{color:#93c5fd}
+
+/* FILTERS */
+.filters{padding:12px 16px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.filters::-webkit-scrollbar{display:none}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s}
+.filter-btn.active{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600}
+.filter-btn:hover{border-color:#60a5fa;color:#e2e8f0}
+
+/* WEEK SELECTOR */
+.week-selector{padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
+.week-label{font-size:0.8rem;font-weight:600;color:#93c5fd}
+.week-nav{display:flex;gap:4px}
+.week-nav button{width:32px;height:32px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.week-nav button:hover{border-color:#60a5fa}
+
+/* STATS */
+.stats{padding:8px 16px;display:flex;gap:8px}
+.stat-card{flex:1;background:#1e293b;border-radius:10px;padding:10px;text-align:center;border:1px solid #334155}
+.stat-num{font-size:1.3rem;font-weight:700;color:#60a5fa}
+.stat-label{font-size:0.6rem;color:#64748b;margin-top:2px}
+
+/* VIEW: WEEKLY */
+.view{padding:0 16px 100px}
+.view.hidden{display:none}
+
+/* DAY SECTION */
+.day-section{margin-bottom:16px}
+.day-header{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #1e293b;margin-bottom:8px}
+.day-icon{font-size:1.2rem}
+.day-name{font-size:0.9rem;font-weight:700;color:#e2e8f0}
+.day-date{font-size:0.72rem;color:#64748b;margin-left:auto}
+.day-count{background:#2563eb;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:600}
+
+/* SCHEDULE CARD */
+.sched-card{background:#1e293b;border-radius:12px;padding:14px;margin-bottom:8px;border-left:3px solid #334155;transition:0.2s}
+.sched-card:hover{transform:translateX(2px);box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.sched-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.sched-time{font-size:0.72rem;font-weight:600;color:#60a5fa;white-space:nowrap}
+.sched-mk{font-size:0.85rem;font-weight:700;color:#e2e8f0;margin-top:4px}
+.sched-prodi{font-size:0.65rem;padding:2px 8px;border-radius:8px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.sched-detail{font-size:0.72rem;color:#94a3b8;margin-top:4px;display:flex;flex-wrap:wrap;gap:8px}
+.sched-detail span{display:flex;align-items:center;gap:3px}
+.sched-dosen{font-size:0.72rem;color:#60a5fa;margin-top:6px;display:flex;align-items:center;gap:4px}
+
+/* PRODI COLORS */
+.prodi-tptp{background:rgba(59,130,246,0.15);color:#60a5fa;border-color:#3b82f6}
+.prodi-bikbp{background:rgba(16,185,129,0.15);color:#34d399;border-color:#10b981}
+.prodi-agri{background:rgba(251,191,36,0.15);color:#fbbf24;border-color:#f59e0b}
+.prodi-horti{background:rgba(168,85,247,0.15);color:#a78bfa;border-color:#8b5cf6}
+.prodi-trk{background:rgba(239,68,68,0.15);color:#f87171;border-color:#ef4444}
+
+/* DOSEN VIEW */
+.dosen-card{background:#1e293b;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #334155}
+.dosen-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.dosen-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff}
+.dosen-name{font-size:0.9rem;font-weight:700;color:#e2e8f0}
+.dosen-role{font-size:0.65rem;color:#94a3b8}
+.dosen-schedule{display:flex;flex-direction:column;gap:6px}
+.dosen-sched-row{display:flex;align-items:center;gap:8px;padding:8px;background:#0f172a;border-radius:8px}
+.dosen-sched-day{font-size:0.72rem;font-weight:700;color:#60a5fa;min-width:40px}
+.dosen-sched-info{font-size:0.72rem;color:#e2e8f0}
+.dosen-stat{font-size:0.65rem;color:#64748b;margin-left:auto;font-weight:600}
+
+/* SUMMARY VIEW */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px}
+.summary-item{background:#1e293b;border-radius:12px;padding:14px;border:1px solid #334155}
+.summary-title{font-size:0.65rem;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.summary-value{font-size:1.4rem;font-weight:800;color:#60a5fa}
+.summary-sub{font-size:0.65rem;color:#94a3b8;margin-top:2px}
+.summary-full{grid-column:1/-1}
+
+/* PROGRESS BAR */
+.progress-bar{height:6px;background:#334155;border-radius:3px;margin-top:8px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width 0.5s}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 20px}
+.empty-icon{font-size:3rem;margin-bottom:12px}
+.empty-text{font-size:0.85rem;color:#64748b}
+
+/* FAB */
+.fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;font-size:1.3rem;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,0.4);z-index:50;display:flex;align-items:center;justify-content:center;transition:0.2s}
+.fab:hover{transform:scale(1.1)}
+
+/* SHARE */
+.share-btn{position:fixed;bottom:20px;left:20px;padding:10px 18px;border-radius:28px;background:#25d366;color:#fff;border:none;font-size:0.8rem;font-weight:600;cursor:pointer;box-shadow:0 4px 15px rgba(37,211,102,0.3);z-index:50;font-family:inherit;display:flex;align-items:center;gap:6px}
+
+/* LEGEND */
+.legend{padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:0.6rem;color:#94a3b8}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#334155;border-radius:4px}
+</style>
+</head>
+<body>
+
+<div class="header">
+<h1>📅 Jadwal Dosen BINGPRO</h1>
+<p>Prodi Bahasa Inggris Profesional — Politeknik Pertanian Negeri Payakumbuh</p>
+<div class="badge-row">
+<span class="badge">👩‍🏫 5 Dosen</span>
+<span class="badge">📚 5 Prodi</span>
+<span class="badge" id="sheetStatus">📊 Memuat data...</span>
+</div>
+</div>
+
+<div class="nav-tabs">
+<div class="nav-tab active" data-view="weekly" onclick="switchView('weekly')">📅 Mingguan</div>
+<div class="nav-tab" data-view="dosen" onclick="switchView('dosen')">👩‍🏫 Per Dosen</div>
+<div class="nav-tab" data-view="summary" onclick="switchView('summary')">📊 Ringkasan</div>
+</div>
+
+<div id="filterArea" class="filters">
+<button class="filter-btn active" data-filter="all">Semua</button>
+<button class="filter-btn" data-filter="TPTP">📘 TPTP</button>
+<button class="filter-btn" data-filter="BIKBP">📗 BIKBP</button>
+<button class="filter-btn" data-filter="Agribisnis">📙 Agribisnis</button>
+<button class="filter-btn" data-filter="Hortikultura">📕 Hortikultura</button>
+<button class="filter-btn" data-filter="TRK">📒 TRK</button>
+</div>
+
+<div class="week-selector">
+<div class="week-nav">
+<button onclick="changeWeek(-1)">‹</button>
+</div>
+<div class="week-label" id="weekLabel">Minggu Ini</div>
+<div class="week-nav">
+<button onclick="changeWeek(1)">›</button>
+</div>
+</div>
+
+<div class="stats">
+<div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total Jadwal</div></div>
+<div class="stat-card"><div class="stat-num" id="statDosen">5</div><div class="stat-label">Dosen</div></div>
+<div class="stat-card"><div class="stat-num" id="statProdi">5</div><div class="stat-label">Prodi</div></div>
+</div>
+
+<div class="legend">
+<div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>TPTP</div>
+<div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>BIKBP</div>
+<div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Agribisnis</div>
+<div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>Hortikultura</div>
+<div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>TRK</div>
+</div>
+
+<!-- WEEKLY VIEW -->
+<div class="view" id="viewWeekly"></div>
+
+<!-- PER DOSEN VIEW -->
+<div class="view hidden" id="viewDosen"></div>
+
+<!-- SUMMARY VIEW -->
+<div class="view hidden" id="viewSummary"></div>
+
+<button class="share-btn" onclick="shareWA()">💬 Share</button>
+<button class="fab" onclick="window.open('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/edit','_blank')">📝</button>
+
+<script>
+const SHEET_ID = '1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw';
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Jadwal+Dosen`;
+
+const DOSEN_COLORS = {
+'Resa Yulita':'#3b82f6',
+'Meriyan Elza':'#10b981',
+'Yuliandri':'#f59e0b',
+'Hudia':'#8b5cf6',
+'Widya Febrina':'#ef4444'
+};
+
+const DOSEN_ROLES = {
+'Resa Yulita':'PIC BINGPRO',
+'Meriyan Elza':'Dokumentasi',
+'Yuliandri':'Dosen',
+'Hudia':'Bendahara + Konsumsi',
+'Widya Febrina':'Acara / PJ TRK'
+};
+
+const DOSEN_INITIALS = {
+'Resa Yulita':'RY',
+'Meriyan Elza':'ME',
+'Yuliandri':'YL',
+'Hudia':'HD',
+'Widya Febrina':'WF'
+};
+
+const PRODI_CLASS = {
+'TPTP':'prodi-tptp',
+'BIKBP':'prodi-bikbp',
+'Agribisnis':'prodi-agri',
+'Hortikultura':'prodi-horti',
+'TRK':'prodi-trk'
+};
+
+const DAYS = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const DAY_ICONS = {'Senin':'🔵','Selasa':'🟢','Rabu':'🟡','Kamis':'🟣','Jumat':'🔴','Sabtu':'⚪'};
+
+let schedules = [];
+let currentFilter = 'all';
+let currentView = 'weekly';
+let weekOffset = 0;
+
+// Built-in data (fallback)
+const builtInData = [
+{day:'Selasa',time:'08:00-09:30',mk:'Bahasa Inggris 2',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R13',minggu:'1-16'},
+{day:'Selasa',time:'09:30-11:00',mk:'Bahasa Inggris 2',sks:2,prodi:'TPTP',kelas:'B',dosen:'Resa Yulita',ruang:'R13',minggu:'1-16'},
+{day:'Selasa',time:'11:00-12:30',mk:'Seminar Hasil',sks:1,prodi:'TPTP',kelas:'-',dosen:'Resa Yulita',ruang:'R14',minggu:'1-16'},
+{day:'Kamis',time:'08:00-09:30',mk:'Bahasa Inggris 2',sks:2,prodi:'TPTP',kelas:'B',dosen:'Resa Yulita',ruang:'R46',minggu:'1-16'},
+{day:'Kamis',time:'09:30-11:00',mk:'Seminar Hasil',sks:1,prodi:'TPTP',kelas:'-',dosen:'Resa Yulita',ruang:'R14',minggu:'1-16'},
+{day:'Kamis',time:'13:00-14:30',mk:'Bahasa Inggris 2',sks:2,prodi:'TPTP',kelas:'C',dosen:'Resa Yulita',ruang:'R17',minggu:'1-16'},
+{day:'Jumat',time:'08:00-09:30',mk:'Bahasa Inggris 2',sks:2,prodi:'BIKBP',kelas:'A',dosen:'Resa Yulita',ruang:'Online',minggu:'1-16'},
+
+{day:'Senin',time:'08:00-09:30',mk:'Bahasa Inggris 1',sks:2,prodi:'Agribisnis',kelas:'A',dosen:'Meriyan Elza',ruang:'R12',minggu:'1-16'},
+{day:'Senin',time:'09:30-11:00',mk:'Bahasa Inggris 1',sks:2,prodi:'Agribisnis',kelas:'B',dosen:'Meriyan Elza',ruang:'R12',minggu:'1-16'},
+{day:'Selasa',time:'13:00-14:30',mk:'Bahasa Inggris 2',sks:2,prodi:'Hortikultura',kelas:'A',dosen:'Meriyan Elza',ruang:'R15',minggu:'1-16'},
+
+{day:'Senin',time:'11:00-12:30',mk:'Bahasa Inggris 1',sks:2,prodi:'TRK',kelas:'A',dosen:'Yuliandri',ruang:'R10',minggu:'1-16'},
+{day:'Rabu',time:'08:00-09:30',mk:'Bahasa Inggris 2',sks:2,prodi:'BIKBP',kelas:'B',dosen:'Yuliandri',ruang:'R20',minggu:'1-16'},
+{day:'Rabu',time:'09:30-11:00',mk:'Bahasa Inggris 2',sks:2,prodi:'Hortikultura',kelas:'B',dosen:'Yuliandri',ruang:'R20',minggu:'1-16'},
+
+{day:'Selasa',time:'08:00-09:30',mk:'Bahasa Inggris 1',sks:2,prodi:'BIKBP',kelas:'A',dosen:'Hudia',ruang:'R11',minggu:'1-16'},
+{day:'Kamis',time:'08:00-09:30',mk:'Bahasa Inggris 1',sks:2,prodi:'BIKBP',kelas:'B',dosen:'Hudia',ruang:'R11',minggu:'1-16'},
+{day:'Kamis',time:'11:00-12:30',mk:'Bahasa Inggris 1',sks:2,prodi:'Hortikultura',kelas:'A',dosen:'Hudia',ruang:'R16',minggu:'1-16'},
+
+{day:'Rabu',time:'13:00-14:30',mk:'Bahasa Inggris 1',sks:2,prodi:'TRK',kelas:'B',dosen:'Widya Febrina',ruang:'R22',minggu:'1-16'},
+{day:'Jumat',time:'09:30-11:00',mk:'Bahasa Inggris 2',sks:2,prodi:'TRK',kelas:'A',dosen:'Widya Febrina',ruang:'R22',minggu:'1-16'},
+{day:'Jumat',time:'11:00-12:30',mk:'Bahasa Inggris 2',sks:2,prodi:'TRK',kelas:'B',dosen:'Widya Febrina',ruang:'R22',minggu:'1-16'},
+];
+
+function getWeekDates(offset) {
+const now = new Date();
+const monday = new Date(now);
+monday.setDate(now.getDate() - ((now.getDay() + 6) % 7) + (offset * 7));
+const dates = [];
+for(let i = 0; i < 7; i++) {
+const d = new Date(monday);
+d.setDate(monday.getDate() + i);
+dates.push(d);
+}
+return dates;
+}
+
+function formatDate(d) {
+return d.getDate() + '/' + (d.getMonth()+1);
+}
+
+function changeWeek(dir) {
+weekOffset += dir;
+updateWeekLabel();
+renderAll();
+}
+
+function updateWeekLabel() {
+const dates = getWeekDates(weekOffset);
+const start = dates[0].toLocaleDateString('id-ID',{day:'numeric',month:'short'});
+const end = dates[5].toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
+if(weekOffset === 0) {
+document.getElementById('weekLabel').textContent = 'Minggu Ini (' + start + ' - ' + end + ')';
+} else if(weekOffset === 1) {
+document.getElementById('weekLabel').textContent = 'Minggu Depan (' + start + ' - ' + end + ')';
+} else if(weekOffset === -1) {
+document.getElementById('weekLabel').textContent = 'Minggu Lalu (' + start + ' - ' + end + ')';
+} else {
+document.getElementById('weekLabel').textContent = start + ' - ' + end;
+}
+}
+
+function getFiltered() {
+let list = schedules;
+if(currentFilter !== 'all') list = list.filter(s => s.prodi === currentFilter);
+return list;
+}
+
+function switchView(view) {
+currentView = view;
+document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+document.querySelector(`[data-view="${view}"]`).classList.add('active');
+document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+document.getElementById('view' + view.charAt(0).toUpperCase() + view.slice(1)).classList.remove('hidden');
+document.getElementById('filterArea').style.display = view === 'weekly' ? 'flex' : 'none';
+renderAll();
+}
+
+function renderWeekly() {
+const container = document.getElementById('viewWeekly');
+const filtered = getFiltered();
+const dates = getWeekDates(weekOffset);
+
+let html = '';
+DAYS.forEach((day, idx) => {
+const dayScheds = filtered.filter(s => s.day === day);
+if(dayScheds.length === 0) return;
+dayScheds.sort((a,b) => a.time.localeCompare(b.time));
+
+const dateStr = dates[idx] ? formatDate(dates[idx]) : '';
+html += `<div class="day-section">
+<div class="day-header">
+<span class="day-icon">${DAY_ICONS[day]||'📅'}</span>
+<span class="day-name">${day}</span>
+<span class="day-date">${dateStr}</span>
+<span class="day-count">${dayScheds.length} jadwal</span>
+</div>`;
+
+dayScheds.forEach(s => {
+const pc = PRODI_CLASS[s.prodi] || 'prodi-tptp';
+html += `<div class="sched-card" style="border-left-color:${DOSEN_COLORS[s.dosen]||'#334155'}">
+<div class="sched-top">
+<div>
+<div class="sched-time">🕐 ${s.time} ${s.sks ? '('+s.sks+' SKS)' : ''}</div>
+<div class="sched-mk">${s.mk}</div>
+</div>
+<span class="sched-prodi ${pc}">${s.prodi}</span>
+</div>
+<div class="sched-detail">
+${s.kelas && s.kelas !== '-' ? '<span>👥 Kelas '+s.kelas+'</span>' : ''}
+${s.ruang ? '<span>📍 '+s.ruang+'</span>' : ''}
+${s.minggu ? '<span>📆 Minggu '+s.minggu+'</span>' : ''}
+</div>
+<div class="sched-dosen">👩‍🏫 ${s.dosen}</div>
+</div>`;
+});
+html += '</div>';
+});
+
+if(!html) {
+html = '<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Tidak ada jadwal untuk filter ini.<br>Coba pilih filter lain.</div></div>';
+}
+container.innerHTML = html;
+}
+
+function renderDosen() {
+const container = document.getElementById('viewDosen');
+const filtered = getFiltered();
+const dosenList = [...new Set(filtered.map(s => s.dosen))];
+
+let html = '';
+dosenList.forEach(dosen => {
+const dScheds = filtered.filter(s => s.dosen === dosen);
+const color = DOSEN_COLORS[dosen] || '#3b82f6';
+const role = DOSEN_ROLES[dosen] || '';
+const initials = DOSEN_INITIALS[dosen] || dosen.charAt(0);
+
+// Group by day
+const byDay = {};
+dScheds.forEach(s => {
+if(!byDay[s.day]) byDay[s.day] = [];
+byDay[s.day].push(s);
+});
+
+html += `<div class="dosen-card">
+<div class="dosen-header">
+<div class="dosen-avatar" style="background:${color}">${initials}</div>
+<div>
+<div class="dosen-name">${dosen}</div>
+<div class="dosen-role">${role} • ${dScheds.length} jadwal/minggu</div>
+</div>
+</div>
+<div class="dosen-schedule">`;
+
+DAYS.forEach(day => {
+if(!byDay[day]) return;
+byDay[day].sort((a,b) => a.time.localeCompare(b.time));
+byDay[day].forEach(s => {
+const pc = PRODI_CLASS[s.prodi] || '';
+html += `<div class="dosen-sched-row">
+<div class="dosen-sched-day">${day.substring(0,3)}</div>
+<div class="dosen-sched-info">${s.time} — ${s.mk} <span class="sched-prodi ${pc}" style="font-size:0.6rem;padding:1px 6px">${s.prodi}</span></div>
+<div class="dosen-stat">${s.kelas !== '-' ? 'Kelas '+s.kelas : ''}</div>
+</div>`;
+});
+});
+
+html += '</div></div>';
+});
+
+if(!html) {
+html = '<div class="empty"><div class="empty-icon">👩‍🏫</div><div class="empty-text">Tidak ada data dosen.</div></div>';
+}
+container.innerHTML = html;
+}
+
+function renderSummary() {
+const container = document.getElementById('viewSummary');
+const filtered = getFiltered();
+const total = filtered.length;
+const dosenCount = new Set(filtered.map(s => s.dosen)).size;
+const prodiCount = new Set(filtered.map(s => s.prodi)).size;
+const totalSKS = filtered.reduce((sum, s) => sum + (parseInt(s.sks) || 0), 0);
+
+// Per prodi count
+const prodiCounts = {};
+filtered.forEach(s => { prodiCounts[s.prodi] = (prodiCounts[s.prodi]||0) + 1; });
+
+// Per dosen count
+const dosenCounts = {};
+filtered.forEach(s => { dosenCounts[s.dosen] = (dosenCounts[s.dosen]||0) + 1; });
+
+// Per day count
+const dayCounts = {};
+filtered.forEach(s => { dayCounts[s.day] = (dayCounts[s.day]||0) + 1; });
+
+const maxDosen = Math.max(...Object.values(dosenCounts), 1);
+const maxProdi = Math.max(...Object.values(prodiCounts), 1);
+const maxDay = Math.max(...Object.values(dayCounts), 1);
+
+let html = `<div class="summary-grid">
+<div class="summary-item">
+<div class="summary-title">Total Jadwal</div>
+<div class="summary-value">${total}</div>
+<div class="summary-sub">per minggu</div>
+</div>
+<div class="summary-item">
+<div class="summary-title">Total SKS</div>
+<div class="summary-value">${totalSKS}</div>
+<div class="summary-sub">beban mengajar</div>
+</div>`;
+
+// Per dosen
+html += `<div class="summary-item summary-full">
+<div class="summary-title">Beban Per Dosen</div>`;
+Object.entries(dosenCounts).sort((a,b) => b[1]-a[1]).forEach(([name, count]) => {
+const pct = Math.round(count/maxDosen*100);
+const color = DOSEN_COLORS[name] || '#3b82f6';
+html += `<div style="margin-top:8px">
+<div style="display:flex;justify-content:space-between;font-size:0.72rem">
+<span style="color:#e2e8f0">${name}</span>
+<span style="color:#94a3b8">${count} jadwal</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div>
+</div>`;
+});
+html += '</div>';
+
+// Per prodi
+html += `<div class="summary-item summary-full">
+<div class="summary-title">Jadwal Per Prodi</div>`;
+Object.entries(prodiCounts).sort((a,b) => b[1]-a[1]).forEach(([name, count]) => {
+const pct = Math.round(count/maxProdi*100);
+html += `<div style="margin-top:8px">
+<div style="display:flex;justify-content:space-between;font-size:0.72rem">
+<span style="color:#e2e8f0">${name}</span>
+<span style="color:#94a3b8">${count} jadwal</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${name==='TPTP'?'#3b82f6':name==='BIKBP'?'#10b981':name==='Agribisnis'?'#f59e0b':name==='Hortikultura'?'#8b5cf6':'#ef4444'}"></div></div>
+</div>`;
+});
+html += '</div>';
+
+// Per hari
+html += `<div class="summary-item summary-full">
+<div class="summary-title">Distribusi Per Hari</div>`;
+DAYS.forEach(day => {
+const count = dayCounts[day] || 0;
+if(count === 0) return;
+const pct = Math.round(count/maxDay*100);
+html += `<div style="margin-top:8px">
+<div style="display:flex;justify-content:space-between;font-size:0.72rem">
+<span style="color:#e2e8f0">${DAY_ICONS[day]||''} ${day}</span>
+<span style="color:#94a3b8">${count} jadwal</span>
+</div>
+<div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:#60a5fa"></div></div>
+</div>`;
+});
+html += '</div>';
+
+html += '</div>';
+container.innerHTML = html;
+}
+
+function renderAll() {
+if(currentView === 'weekly') renderWeekly();
+else if(currentView === 'dosen') renderDosen();
+else if(currentView === 'summary') renderSummary();
+
+const filtered = getFiltered();
+document.getElementById('statTotal').textContent = filtered.length;
+document.getElementById('statDosen').textContent = new Set(filtered.map(s=>s.dosen)).size;
+document.getElementById('statProdi').textContent = new Set(filtered.map(s=>s.prodi)).size;
+}
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+btn.addEventListener('click', () => {
+document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+btn.classList.add('active');
+currentFilter = btn.dataset.filter;
+renderAll();
+});
+});
+
+// Load from Google Sheet
+async function loadFromSheet() {
+try {
+const resp = await fetch(SHEET_URL);
+if (!resp.ok) throw new Error('Fetch failed');
+const csv = await resp.text();
+const rows = csv.split('\n').filter(r => r.trim());
+if (rows.length < 2) throw new Error('No data');
+const headers = parseCSVRow(rows[0]).map(h => h.toLowerCase().trim());
+const sheetData = [];
+for (let i = 1; i < rows.length; i++) {
+const cols = parseCSVRow(rows[i]);
+if (cols.length < 4 || !cols[0]) continue;
+const obj = {};
+headers.forEach((h, idx) => { obj[h] = (cols[idx] || '').trim(); });
+sheetData.push({
+day: obj.hari || obj.day || '',
+time: obj.jam || obj.time || '',
+mk: obj.mk || obj['mata kuliah'] || obj.matkul || '',
+sks: parseInt(obj.sks) || 0,
+prodi: obj.prodi || '',
+kelas: obj.kelas || '-',
+dosen: obj.dosen || '',
+ruang: obj.ruang || obj.ruangan || '',
+minggu: obj.minggu || obj.week || '1-16'
+});
+}
+if (sheetData.length > 0) {
+schedules = sheetData;
+document.getElementById('sheetStatus').textContent = '📊 Data dari Google Sheet (live)';
+document.getElementById('sheetStatus').classList.add('live');
+return true;
+}
+} catch(e) {
+console.log('Google Sheet unavailable, using built-in data: ' + e.message);
+}
+return false;
+}
+
+function parseCSVRow(row) {
+const result = [];
+let current = '';
+let inQuotes = false;
+for (let i = 0; i < row.length; i++) {
+const ch = row[i];
+if (ch === '"') { inQuotes = !inQuotes; }
+else if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
+else { current += ch; }
+}
+result.push(current.trim());
+return result;
+}
+
+function shareWA() {
+const text = encodeURIComponent('📅 Jadwal Dosen BINGPRO — Politeknik Pertanian Negeri Payakumbuh\n\n5 Dosen • 5 Prodi • Tracking Jadwal Mingguan\n\n' + window.location.href);
+window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+// Init
+async function init() {
+schedules = builtInData;
+updateWeekLabel();
+renderAll();
+
+try {
+const fromSheet = await loadFromSheet();
+if(fromSheet) {
+updateWeekLabel();
+renderAll();
+}
+} catch(e) {
+console.log('Sheet load error: ' + e.message);
+document.getElementById('sheetStatus').textContent = '📊 Data bawaan (offline)';
+}
+}
+init();
+</script>
+</body>
+</html>
