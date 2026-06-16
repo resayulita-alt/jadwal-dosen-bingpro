@@ -182,7 +182,7 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 <div class="view hidden" id="viewSummary"></div>
 
 <button class="share-btn" onclick="shareWA()">💬 Share</button>
-<button class="fab" onclick="window.open('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/edit','_blank')">📝</button>
+<button class="fab" onclick="document.getElementById('formModal').classList.add('show')">📝</button>
 
 <script>
 const SHEET_ID = '1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw';
@@ -633,5 +633,25 @@ document.getElementById('sheetStatus').textContent = '📊 Data bawaan (offline)
 }
 init();
 </script>
+
+<!-- FORM MODAL -->
+<div class="modal-overlay" id="formModal">
+<div class="modal" style="background:#1e293b;border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:90vh;overflow:hidden;animation:slideUp 0.3s ease">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #334155">
+<div style="font-size:1rem;font-weight:700;color:#60a5fa">📝 Input Jadwal Mengajar</div>
+<button onclick="document.getElementById('formModal').classList.remove('show')" style="background:none;border:none;color:#94a3b8;font-size:1.4rem;cursor:pointer;padding:4px">✕</button>
+</div>
+<div style="height:calc(90vh - 60px);overflow:hidden">
+<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdEArnVfCfJ6Euqc3eIWMUrjPlv6VK4HFOIA-9kXkKiBYgBHg/viewform?embedded=true" style="width:100%;height:100%;border:none" frameborder="0" marginheight="0" marginwidth="0">Memuat formulir...</iframe>
+</div>
+</div>
+</div>
+
+<style>
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+</style>
+
 </body>
 </html>
