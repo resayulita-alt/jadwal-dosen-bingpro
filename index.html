@@ -232,9 +232,9 @@ function buildWeekChips(){
   var c = document.getElementById('weekChips');
   if(weeks.length <= 1){c.style.display='none';return;}
   c.style.display='flex';
-  var html = '<button class="week-chip-btn'+(currentWeek==='all'?' active')+'" onclick="setWeek(\'all\')">Semua</button>';
+  var html = '<button class="week-chip-btn'+(currentWeek==='all'?' active':'')+'" onclick="setWeek(\'all\')">Semua</button>';
   for(var i=0;i<weeks.length;i++){
-    html += '<button class="week-chip-btn'+(currentWeek===weeks[i]?' active')+'" onclick="setWeek(\''+weeks[i]+'\')">Minggu '+weeks[i]+'</button>';
+    html += '<button class="week-chip-btn'+(currentWeek===weeks[i]?' active':'')+'" onclick="setWeek(\''+weeks[i]+'\')">Minggu '+weeks[i]+'</button>';
   }
   c.innerHTML = html;
 }
