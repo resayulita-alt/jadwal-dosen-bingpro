@@ -21,27 +21,47 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 .filters::-webkit-scrollbar{display:none}
 .filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0}
 .filter-btn.active{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600}
-.week-selector{padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
-.week-label{font-size:0.8rem;font-weight:600;color:#93c5fd}
-.week-nav{display:flex;gap:4px}
-.week-nav button{width:32px;height:32px;border-radius:8px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* Week selector - improved */
+.week-bar{padding:12px 16px;display:flex;align-items:center;gap:10px}
+.week-btn{width:36px;height:36px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s}
+.week-btn:active{background:#2563eb}
+.week-chip{flex:1;text-align:center}
+.week-chip .week-num{font-size:1.1rem;font-weight:800;color:#60a5fa}
+.week-chip .week-range{font-size:0.65rem;color:#64748b;margin-top:2px}
+.week-chips{padding:0 16px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.week-chips::-webkit-scrollbar{display:none}
+.week-chip-btn{padding:6px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0}
+.week-chip-btn.active{background:#1d4ed8;border-color:#3b82f6;color:#fff;font-weight:600}
+
 .stats{padding:8px 16px;display:flex;gap:8px}
 .stat-card{flex:1;background:#1e293b;border-radius:10px;padding:10px;text-align:center;border:1px solid #334155}
 .stat-num{font-size:1.3rem;font-weight:700;color:#60a5fa}
 .stat-label{font-size:0.6rem;color:#64748b;margin-top:2px}
 .view{padding:0 16px 100px}
 .view.hidden{display:none}
-.day-section{margin-bottom:16px}
-.day-header{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #1e293b;margin-bottom:8px}
-.day-name{font-size:0.9rem;font-weight:700;color:#e2e8f0}
-.day-date{font-size:0.72rem;color:#64748b;margin-left:auto}
-.day-count{background:#2563eb;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:600}
-.sched-card{background:#1e293b;border-radius:12px;padding:14px;margin-bottom:8px;border-left:3px solid #334155}
-.sched-time{font-size:0.8rem;font-weight:700;color:#fbbf24;margin-bottom:4px}
-.sched-mk{font-size:0.9rem;font-weight:700;color:#e2e8f0}
-.sched-prodi{font-size:0.65rem;padding:2px 8px;border-radius:8px;font-weight:600;white-space:nowrap;flex-shrink:0;display:inline-block;margin-top:4px}
-.sched-detail{font-size:0.72rem;color:#94a3b8;margin-top:4px;display:flex;flex-wrap:wrap;gap:8px}
-.sched-dosen{font-size:0.72rem;color:#60a5fa;margin-top:6px}
+
+/* Day section - cleaner */
+.day-section{margin-bottom:20px}
+.day-header{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #1e293b;margin-bottom:10px}
+.day-name{font-size:0.85rem;font-weight:700;color:#e2e8f0}
+.day-date{font-size:0.65rem;color:#64748b;margin-left:auto}
+.day-count{background:#2563eb;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.6rem;font-weight:600}
+
+/* Schedule card - cleaner layout */
+.sched-card{background:#1e293b;border-radius:12px;padding:12px 14px;margin-bottom:8px;border-left:3px solid #334155;display:flex;gap:12px;align-items:flex-start}
+.sched-left{display:flex;flex-direction:column;align-items:center;min-width:54px}
+.sched-time{font-size:0.72rem;font-weight:700;color:#fbbf24;text-align:center;line-height:1.3}
+.sched-time-divider{font-size:0.5rem;color:#64748b;margin:1px 0}
+.sched-right{flex:1;min-width:0}
+.sched-mk-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sched-mk{font-size:0.85rem;font-weight:700;color:#e2e8f0}
+.sched-prodi{font-size:0.6rem;padding:2px 8px;border-radius:8px;font-weight:600;white-space:nowrap}
+.sched-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.sched-tag{font-size:0.6rem;padding:2px 6px;border-radius:6px;background:#0f172a;color:#94a3b8}
+.sched-dosen{font-size:0.65rem;color:#60a5fa;margin-top:4px;display:flex;align-items:center;gap:4px}
+.sched-dosen-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
 /* Prodi colors */
 .prodi-TPTP{background:rgba(59,130,246,0.15);color:#60a5fa}
 .prodi-BIKBP{background:rgba(16,185,129,0.15);color:#34d399}
@@ -59,6 +79,8 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 .prodi-TATA-AIR{background:rgba(56,189,248,0.15);color:#38bdf8}
 .prodi-VETERINER{background:rgba(244,114,182,0.15);color:#f472b6}
 .prodi-KETAHANAN-PANGAN{background:rgba(251,146,60,0.15);color:#fb923c}
+
+/* Dosen view */
 .dosen-card{background:#1e293b;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #334155}
 .dosen-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .dosen-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff}
@@ -67,6 +89,8 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 .dosen-sched-row{display:flex;align-items:center;gap:8px;padding:8px;background:#0f172a;border-radius:8px;margin-top:6px}
 .dosen-sched-day{font-size:0.72rem;font-weight:700;color:#60a5fa;min-width:40px}
 .dosen-sched-info{font-size:0.72rem;color:#e2e8f0}
+
+/* Summary */
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px}
 .summary-item{background:#1e293b;border-radius:12px;padding:14px;border:1px solid #334155}
 .summary-title{font-size:0.65rem;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
@@ -74,6 +98,7 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 .summary-full{grid-column:1/-1}
 .progress-bar{height:6px;background:#334155;border-radius:3px;margin-top:8px;overflow:hidden}
 .progress-fill{height:100%;border-radius:3px}
+
 .empty{text-align:center;padding:60px 20px}
 .empty-icon{font-size:3rem;margin-bottom:12px}
 .empty-text{font-size:0.85rem;color:#64748b}
@@ -123,33 +148,11 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 <button class="filter-btn" data-filter="Veteriner">Veteriner</button>
 <button class="filter-btn" data-filter="Ketahanan Pangan">Ket. Pangan</button>
 </div>
-<div class="week-selector">
-<div class="week-nav"><button onclick="changeWeek(-1)">&lsaquo;</button></div>
-<div class="week-label" id="weekLabel">Minggu Ini</div>
-<div class="week-nav"><button onclick="changeWeek(1)">&rsaquo;</button></div>
-</div>
+<div class="week-chips" id="weekChips"></div>
 <div class="stats">
 <div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total Jadwal</div></div>
 <div class="stat-card"><div class="stat-num" id="statDosen">0</div><div class="stat-label">Dosen</div></div>
 <div class="stat-card"><div class="stat-num" id="statProdi">0</div><div class="stat-label">Prodi</div></div>
-</div>
-<div class="legend">
-<div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>TPTP</div>
-<div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>BIKBP</div>
-<div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Agribisnis</div>
-<div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Hortikultura</div>
-<div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>TRK</div>
-<div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>BINGPRO</div>
-<div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Rek. Pangan</div>
-<div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Ternak</div>
-<div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>Benih</div>
-<div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>Perkebunan</div>
-<div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>Man. Agri</div>
-<div class="legend-item"><div class="legend-dot" style="background:#eab308"></div>Pangan D3</div>
-<div class="legend-item"><div class="legend-dot" style="background:#9ca3af"></div>Mekanisasi</div>
-<div class="legend-item"><div class="legend-dot" style="background:#38bdf8"></div>Tata Air</div>
-<div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>Veteriner</div>
-<div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div>Ket. Pangan</div>
 </div>
 <div class="view" id="viewWeekly"></div>
 <div class="view hidden" id="viewDosen"></div>
@@ -182,12 +185,11 @@ var schedules = [
 
 var currentFilter = 'all';
 var currentView = 'weekly';
-var weekOffset = 0;
+var currentWeek = 'all';
 var DOSEN_COLORS = {'Resa Yulita':'#3b82f6','Meriyan Elza':'#10b981','Yuliandri':'#f59e0b','Hudia':'#8b5cf6','Widya Febrina':'#ef4444'};
 var DOSEN_INITIALS = {'Resa Yulita':'RY','Meriyan Elza':'ME','Yuliandri':'YL','Hudia':'HD','Widya Febrina':'WF'};
 var DOSEN_ROLES = {'Resa Yulita':'PIC BINGPRO','Meriyan Elza':'Dokumentasi','Yuliandri':'Dosen','Hudia':'Bendahara','Widya Febrina':'PJ TRK'};
 
-// Prodi display name → CSS class mapping
 var PRODI_CLASS_MAP = {
   'TPTP':'TPTP','BIKBP':'BIKBP','Agribisnis':'AGRIBISNIS','Hortikultura':'HORTI',
   'TRK':'TRK','BINGPRO':'BINGPRO',
@@ -197,7 +199,6 @@ var PRODI_CLASS_MAP = {
   'Veteriner':'VETERINER','Ketahanan Pangan':'KETAHANAN-PANGAN'
 };
 
-// Prodi colors for summary chart
 var PRODI_COLORS = {
   'TPTP':'#3b82f6','BIKBP':'#10b981','Agribisnis':'#f59e0b','Hortikultura':'#a78bfa',
   'TRK':'#ef4444','BINGPRO':'#f472b6',
@@ -214,27 +215,40 @@ function getProdiClass(prodi){
   return key ? 'prodi-'+key : 'prodi-TPTP';
 }
 
-function getWeekDates(off){
-  var now=new Date(), mon=new Date(now);
-  mon.setDate(now.getDate()-((now.getDay()+6)%7)+(off*7));
-  var dates=[];
-  for(var i=0;i<7;i++){var d=new Date(mon);d.setDate(mon.getDate()+i);dates.push(d);}
-  return dates;
+// Get all unique week numbers from data
+function getWeeks(){
+  var weeks = {};
+  for(var i=0;i<schedules.length;i++){
+    var w = schedules[i].minggu || '?';
+    if(!weeks[w]) weeks[w] = 0;
+    weeks[w]++;
+  }
+  return Object.keys(weeks).sort(function(a,b){return parseInt(a)-parseInt(b);});
 }
-function fmtDate(d){return d.getDate()+'/'+(d.getMonth()+1);}
 
-function changeWeek(dir){weekOffset+=dir;updateWeekLabel();renderAll();}
+// Build week chip buttons
+function buildWeekChips(){
+  var weeks = getWeeks();
+  var c = document.getElementById('weekChips');
+  if(weeks.length <= 1){c.style.display='none';return;}
+  c.style.display='flex';
+  var html = '<button class="week-chip-btn'+(currentWeek==='all'?' active')+'" onclick="setWeek(\'all\')">Semua</button>';
+  for(var i=0;i<weeks.length;i++){
+    html += '<button class="week-chip-btn'+(currentWeek===weeks[i]?' active')+'" onclick="setWeek(\''+weeks[i]+'\')">Minggu '+weeks[i]+'</button>';
+  }
+  c.innerHTML = html;
+}
 
-function updateWeekLabel(){
-  var dates=getWeekDates(weekOffset);
-  var s=fmtDate(dates[0]), e=fmtDate(dates[5])+'/'+dates[5].getFullYear();
-  var lbl=weekOffset===0?'Minggu Ini':weekOffset===1?'Minggu Depan':weekOffset===-1?'Minggu Lalu':'';
-  document.getElementById('weekLabel').textContent=lbl+' ('+s+' - '+e+')';
+function setWeek(w){
+  currentWeek = w;
+  buildWeekChips();
+  renderAll();
 }
 
 function getFiltered(){
-  var list=schedules;
-  if(currentFilter!=='all') list=list.filter(function(s){return s.prodi===currentFilter;});
+  var list = schedules;
+  if(currentFilter!=='all') list = list.filter(function(s){return s.prodi===currentFilter;});
+  if(currentWeek!=='all') list = list.filter(function(s){return (s.minggu||'')===currentWeek;});
   return list;
 }
 
@@ -247,34 +261,104 @@ function switchView(view){
   for(var i=0;i<views.length;i++) views[i].classList.add('hidden');
   document.getElementById('view'+view.charAt(0).toUpperCase()+view.slice(1)).classList.remove('hidden');
   document.getElementById('filterArea').style.display=view==='weekly'?'flex':'none';
+  document.getElementById('weekChips').style.display=view==='weekly'?'flex':'none';
   renderAll();
+}
+
+// Parse time range into start and end
+function parseTime(t){
+  var parts = t.split('-');
+  return {start: parts[0]||t, end: parts[1]||''};
 }
 
 function renderWeekly(){
   var c=document.getElementById('viewWeekly');
-  var f=getFiltered(), dates=getWeekDates(weekOffset), html='';
-  for(var di=0;di<DAYS.length;di++){
-    var day=DAYS[di], ds=[];
-    for(var i=0;i<f.length;i++) if(f[i].day===day) ds.push(f[i]);
-    if(ds.length===0) continue;
-    ds.sort(function(a,b){return a.time.localeCompare(b.time);});
-    html+='<div class="day-section"><div class="day-header"><span class="day-name">'+day+'</span><span class="day-date">'+fmtDate(dates[di])+'</span><span class="day-count">'+ds.length+' jadwal</span></div>';
-    for(var i=0;i<ds.length;i++){
-      var s=ds[i], pc=getProdiClass(s.prodi), dc=DOSEN_COLORS[s.dosen]||'#334155';
-      html+='<div class="sched-card" style="border-left-color:'+dc+'">';
-      html+='<div class="sched-time">'+s.time+'</div>';
-      html+='<div class="sched-mk">'+s.mk+' <span class="sched-prodi '+pc+'">'+s.prodi+'</span></div>';
-      html+='<div class="sched-detail">';
-      if(s.kelas&&s.kelas!=='-') html+='<span>Kelas '+s.kelas+'</span>';
-      html+='<span>'+s.sks+' SKS</span>';
-      if(s.ruang) html+='<span>'+s.ruang+'</span>';
-      if(s.minggu) html+='<span>Minggu '+s.minggu+'</span>';
-      html+='</div><div class="sched-dosen">'+s.dosen+'</div></div>';
-    }
-    html+='</div>';
+  var f=getFiltered();
+
+  if(f.length===0){
+    c.innerHTML='<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Belum ada jadwal'+(currentWeek!=='all'?' minggu '+currentWeek:'')+'.<br>Klik tombol + untuk input.</div></div>';
+    return;
   }
-  if(!html) html='<div class="empty"><div class="empty-icon">+</div><div class="empty-text">Belum ada jadwal.<br>Klik tombol + untuk input jadwal.</div></div>';
-  c.innerHTML=html;
+
+  // Group by week, then by day
+  var weekGroups = {};
+  for(var i=0;i<f.length;i++){
+    var w = f[i].minggu||'?';
+    if(!weekGroups[w]) weekGroups[w] = {};
+    var d = f[i].day;
+    if(!weekGroups[w][d]) weekGroups[w][d] = [];
+    weekGroups[w][d].push(f[i]);
+  }
+
+  var html = '';
+  var weekKeys = Object.keys(weekGroups).sort(function(a,b){return parseInt(a)-parseInt(b);});
+
+  for(var wi=0;wi<weekKeys.length;wi++){
+    var wk = weekKeys[wi];
+    var dayGroups = weekGroups[wk];
+
+    // Week header (only show if multiple weeks or viewing all)
+    if(currentWeek==='all' && weekKeys.length>1){
+      html += '<div style="margin:16px 0 8px;display:flex;align-items:center;gap:8px">';
+      html += '<div style="font-size:0.8rem;font-weight:700;color:#60a5fa">📅 Minggu '+wk+'</div>';
+      html += '<div style="flex:1;height:1px;background:#1e293b"></div>';
+      var weekCount = 0;
+      for(var dk in dayGroups) weekCount += dayGroups[dk].length;
+      html += '<div style="font-size:0.6rem;color:#64748b">'+weekCount+' jadwal</div>';
+      html += '</div>';
+    }
+
+    // Days within this week
+    for(var di=0;di<DAYS.length;di++){
+      var day = DAYS[di];
+      var ds = dayGroups[day];
+      if(!ds || ds.length===0) continue;
+
+      ds.sort(function(a,b){return a.time.localeCompare(b.time);});
+
+      html += '<div class="day-section">';
+      html += '<div class="day-header">';
+      html += '<span class="day-name">'+day+'</span>';
+      html += '<span class="day-count">'+ds.length+' jadwal</span>';
+      html += '</div>';
+
+      for(var i=0;i<ds.length;i++){
+        var s = ds[i];
+        var pc = getProdiClass(s.prodi);
+        var dc = DOSEN_COLORS[s.dosen]||'#334155';
+        var tp = parseTime(s.time);
+
+        html += '<div class="sched-card" style="border-left-color:'+dc+'">';
+
+        // Left: time
+        html += '<div class="sched-left">';
+        html += '<div class="sched-time">'+tp.start+'</div>';
+        if(tp.end) html += '<div class="sched-time-divider">│</div><div class="sched-time">'+tp.end+'</div>';
+        html += '</div>';
+
+        // Right: content
+        html += '<div class="sched-right">';
+        html += '<div class="sched-mk-row">';
+        html += '<span class="sched-mk">'+s.mk+'</span>';
+        if(s.prodi) html += '<span class="sched-prodi '+pc+'">'+s.prodi+'</span>';
+        html += '</div>';
+
+        html += '<div class="sched-meta">';
+        if(s.kelas && s.kelas!=='-') html += '<span class="sched-tag">Kelas '+s.kelas+'</span>';
+        if(s.sks) html += '<span class="sched-tag">'+s.sks+' SKS</span>';
+        if(s.ruang) html += '<span class="sched-tag">📍 '+s.ruang+'</span>';
+        html += '</div>';
+
+        html += '<div class="sched-dosen"><div class="sched-dosen-dot" style="background:'+dc+'"></div>'+s.dosen+'</div>';
+        html += '</div>';
+
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+  }
+
+  c.innerHTML = html;
 }
 
 function renderDosen(){
@@ -283,7 +367,7 @@ function renderDosen(){
   for(var ni=0;ni<names.length;ni++){
     var dn=names[ni], ds=[], color=DOSEN_COLORS[dn]||'#3b82f6', init=DOSEN_INITIALS[dn]||dn.charAt(0), role=DOSEN_ROLES[dn]||'';
     for(var i=0;i<f.length;i++) if(f[i].dosen===dn) ds.push(f[i]);
-    html+='<div class="dosen-card"><div class="dosen-header"><div class="dosen-avatar" style="background:'+color+'">'+init+'</div><div><div class="dosen-name">'+dn+'</div><div class="dosen-role">'+role+' - '+ds.length+' jadwal/minggu</div></div></div>';
+    html+='<div class="dosen-card"><div class="dosen-header"><div class="dosen-avatar" style="background:'+color+'">'+init+'</div><div><div class="dosen-name">'+dn+'</div><div class="dosen-role">'+role+' - '+ds.length+' jadwal</div></div></div>';
     for(var i=0;i<ds.length;i++){
       var s=ds[i];
       html+='<div class="dosen-sched-row"><div class="dosen-sched-day">'+s.day.substring(0,3)+'</div><div class="dosen-sched-info">'+s.time+' - '+s.mk+' ('+s.prodi+')</div></div>';
@@ -312,6 +396,7 @@ function renderSummary(){
 }
 
 function renderAll(){
+  buildWeekChips();
   if(currentView==='weekly') renderWeekly();
   else if(currentView==='dosen') renderDosen();
   else if(currentView==='summary') renderSummary();
@@ -368,7 +453,7 @@ function loadFromSheet(){
         kelas:(cols[7]||'-').trim(),
         dosen:(cols[1]||'').trim(),
         ruang:(cols[8]||'').trim(),
-        minggu:(cols[9]||'16').trim()
+        minggu:(cols[9]||'').trim()
       });
     }
     if(newData.length>0){
@@ -382,7 +467,6 @@ function loadFromSheet(){
   });
 }
 
-updateWeekLabel();
 renderAll();
 loadFromSheet();
 </script>
