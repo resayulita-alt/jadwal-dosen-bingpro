@@ -19,7 +19,7 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 .nav-tab.active{color:#60a5fa;border-bottom-color:#60a5fa;background:rgba(96,165,250,0.05)}
 .filters{padding:12px 16px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .filters::-webkit-scrollbar{display:none}
-.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0}
 .filter-btn.active{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600}
 .week-selector{padding:8px 16px;display:flex;align-items:center;justify-content:space-between}
 .week-label{font-size:0.8rem;font-weight:600;color:#93c5fd}
@@ -42,11 +42,23 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 .sched-prodi{font-size:0.65rem;padding:2px 8px;border-radius:8px;font-weight:600;white-space:nowrap;flex-shrink:0;display:inline-block;margin-top:4px}
 .sched-detail{font-size:0.72rem;color:#94a3b8;margin-top:4px;display:flex;flex-wrap:wrap;gap:8px}
 .sched-dosen{font-size:0.72rem;color:#60a5fa;margin-top:6px}
-.prodi-tptp{background:rgba(59,130,246,0.15);color:#60a5fa}
-.prodi-bikbp{background:rgba(16,185,129,0.15);color:#34d399}
-.prodi-agri{background:rgba(251,191,36,0.15);color:#fbbf24}
-.prodi-horti{background:rgba(168,85,247,0.15);color:#a78bfa}
-.prodi-trk{background:rgba(239,68,68,0.15);color:#f87171}
+/* Prodi colors */
+.prodi-TPTP{background:rgba(59,130,246,0.15);color:#60a5fa}
+.prodi-BIKBP{background:rgba(16,185,129,0.15);color:#34d399}
+.prodi-AGRIBISNIS{background:rgba(251,191,36,0.15);color:#fbbf24}
+.prodi-HORTI{background:rgba(168,85,247,0.15);color:#a78bfa}
+.prodi-TRK{background:rgba(239,68,68,0.15);color:#f87171}
+.prodi-BINGPRO{background:rgba(236,72,153,0.15);color:#f472b6}
+.prodi-REKAYASA-PANGAN{background:rgba(245,158,11,0.15);color:#f59e0b}
+.prodi-TERNAK{background:rgba(16,185,129,0.15);color:#10b981}
+.prodi-BENIH{background:rgba(52,211,153,0.15);color:#34d399}
+.prodi-PERKEBUNAN{background:rgba(217,119,6,0.15);color:#d97706}
+.prodi-MANAJEMEN-AGRI{background:rgba(139,92,246,0.15);color:#8b5cf6}
+.prodi-PANGAN-D3{background:rgba(234,179,8,0.15);color:#eab308}
+.prodi-MEKANISASI{background:rgba(107,114,128,0.15);color:#9ca3af}
+.prodi-TATA-AIR{background:rgba(56,189,248,0.15);color:#38bdf8}
+.prodi-VETERINER{background:rgba(244,114,182,0.15);color:#f472b6}
+.prodi-KETAHANAN-PANGAN{background:rgba(251,146,60,0.15);color:#fb923c}
 .dosen-card{background:#1e293b;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #334155}
 .dosen-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .dosen-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff}
@@ -83,7 +95,7 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 <p>Prodi Bahasa Inggris Profesional - Politeknik Pertanian Negeri Payakumbuh</p>
 <div class="badge-row">
 <span class="badge">5 Dosen</span>
-<span class="badge">5 Prodi</span>
+<span class="badge">16 Prodi</span>
 <span class="badge" id="sheetStatus">Memuat data...</span>
 </div>
 </div>
@@ -99,6 +111,17 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 <button class="filter-btn" data-filter="Agribisnis">Agribisnis</button>
 <button class="filter-btn" data-filter="Hortikultura">Hortikultura</button>
 <button class="filter-btn" data-filter="TRK">TRK</button>
+<button class="filter-btn" data-filter="BINGPRO">BINGPRO</button>
+<button class="filter-btn" data-filter="Rekayasa Pangan">Rek. Pangan</button>
+<button class="filter-btn" data-filter="Ternak">Ternak</button>
+<button class="filter-btn" data-filter="Benih">Benih</button>
+<button class="filter-btn" data-filter="Perkebunan">Perkebunan</button>
+<button class="filter-btn" data-filter="Manajemen Agri">Man. Agri</button>
+<button class="filter-btn" data-filter="Pangan D3">Pangan D3</button>
+<button class="filter-btn" data-filter="Mekanisasi">Mekanisasi</button>
+<button class="filter-btn" data-filter="Tata Air">Tata Air</button>
+<button class="filter-btn" data-filter="Veteriner">Veteriner</button>
+<button class="filter-btn" data-filter="Ketahanan Pangan">Ket. Pangan</button>
 </div>
 <div class="week-selector">
 <div class="week-nav"><button onclick="changeWeek(-1)">&lsaquo;</button></div>
@@ -114,8 +137,19 @@ body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e
 <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>TPTP</div>
 <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>BIKBP</div>
 <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Agribisnis</div>
-<div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>Hortikultura</div>
+<div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>Hortikultura</div>
 <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>TRK</div>
+<div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>BINGPRO</div>
+<div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Rek. Pangan</div>
+<div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Ternak</div>
+<div class="legend-item"><div class="legend-dot" style="background:#34d399"></div>Benih</div>
+<div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>Perkebunan</div>
+<div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>Man. Agri</div>
+<div class="legend-item"><div class="legend-dot" style="background:#eab308"></div>Pangan D3</div>
+<div class="legend-item"><div class="legend-dot" style="background:#9ca3af"></div>Mekanisasi</div>
+<div class="legend-item"><div class="legend-dot" style="background:#38bdf8"></div>Tata Air</div>
+<div class="legend-item"><div class="legend-dot" style="background:#f472b6"></div>Veteriner</div>
+<div class="legend-item"><div class="legend-dot" style="background:#fb923c"></div>Ket. Pangan</div>
 </div>
 <div class="view" id="viewWeekly"></div>
 <div class="view hidden" id="viewDosen"></div>
@@ -152,8 +186,33 @@ var weekOffset = 0;
 var DOSEN_COLORS = {'Resa Yulita':'#3b82f6','Meriyan Elza':'#10b981','Yuliandri':'#f59e0b','Hudia':'#8b5cf6','Widya Febrina':'#ef4444'};
 var DOSEN_INITIALS = {'Resa Yulita':'RY','Meriyan Elza':'ME','Yuliandri':'YL','Hudia':'HD','Widya Febrina':'WF'};
 var DOSEN_ROLES = {'Resa Yulita':'PIC BINGPRO','Meriyan Elza':'Dokumentasi','Yuliandri':'Dosen','Hudia':'Bendahara','Widya Febrina':'PJ TRK'};
-var PRODI_CLASS = {'TPTP':'prodi-tptp','BIKBP':'prodi-bikbp','Agribisnis':'prodi-agri','Hortikultura':'prodi-horti','TRK':'prodi-trk'};
+
+// Prodi display name → CSS class mapping
+var PRODI_CLASS_MAP = {
+  'TPTP':'TPTP','BIKBP':'BIKBP','Agribisnis':'AGRIBISNIS','Hortikultura':'HORTI',
+  'TRK':'TRK','BINGPRO':'BINGPRO',
+  'Rekayasa Pangan':'REKAYASA-PANGAN','Ternak':'TERNAK','Benih':'BENIH',
+  'Perkebunan':'PERKEBUNAN','Manajemen Agri':'MANAJEMEN-AGRI',
+  'Pangan D3':'PANGAN-D3','Mekanisasi':'MEKANISASI','Tata Air':'TATA-AIR',
+  'Veteriner':'VETERINER','Ketahanan Pangan':'KETAHANAN-PANGAN'
+};
+
+// Prodi colors for summary chart
+var PRODI_COLORS = {
+  'TPTP':'#3b82f6','BIKBP':'#10b981','Agribisnis':'#f59e0b','Hortikultura':'#a78bfa',
+  'TRK':'#ef4444','BINGPRO':'#f472b6',
+  'Rekayasa Pangan':'#f59e0b','Ternak':'#10b981','Benih':'#34d399',
+  'Perkebunan':'#d97706','Manajemen Agri':'#8b5cf6',
+  'Pangan D3':'#eab308','Mekanisasi':'#9ca3af','Tata Air':'#38bdf8',
+  'Veteriner':'#f472b6','Ketahanan Pangan':'#fb923c'
+};
+
 var DAYS = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+
+function getProdiClass(prodi){
+  var key = PRODI_CLASS_MAP[prodi];
+  return key ? 'prodi-'+key : 'prodi-TPTP';
+}
 
 function getWeekDates(off){
   var now=new Date(), mon=new Date(now);
@@ -201,7 +260,7 @@ function renderWeekly(){
     ds.sort(function(a,b){return a.time.localeCompare(b.time);});
     html+='<div class="day-section"><div class="day-header"><span class="day-name">'+day+'</span><span class="day-date">'+fmtDate(dates[di])+'</span><span class="day-count">'+ds.length+' jadwal</span></div>';
     for(var i=0;i<ds.length;i++){
-      var s=ds[i], pc=PRODI_CLASS[s.prodi]||'prodi-tptp', dc=DOSEN_COLORS[s.dosen]||'#334155';
+      var s=ds[i], pc=getProdiClass(s.prodi), dc=DOSEN_COLORS[s.dosen]||'#334155';
       html+='<div class="sched-card" style="border-left-color:'+dc+'">';
       html+='<div class="sched-time">'+s.time+'</div>';
       html+='<div class="sched-mk">'+s.mk+' <span class="sched-prodi '+pc+'">'+s.prodi+'</span></div>';
@@ -247,8 +306,7 @@ function renderSummary(){
   for(var k in dSet){var pct=Math.round(dSet[k]/maxD*100),cl=DOSEN_COLORS[k]||'#3b82f6';html+='<div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:0.72rem"><span>'+k+'</span><span>'+dSet[k]+' jadwal</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+cl+'"></div></div></div>';}
   html+='</div><div class="summary-item summary-full"><div class="summary-title">Jadwal Per Prodi</div>';
   var maxP=1;for(var k in pSet) if(pSet[k]>maxP) maxP=pSet[k];
-  var pColors={'TPTP':'#3b82f6','BIKBP':'#10b981','Agribisnis':'#f59e0b','Hortikultura':'#8b5cf6','TRK':'#ef4444'};
-  for(var k in pSet){var pct=Math.round(pSet[k]/maxP*100);html+='<div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:0.72rem"><span>'+k+'</span><span>'+pSet[k]+' jadwal</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+(pColors[k]||'#60a5fa')+'"></div></div></div>';}
+  for(var k in pSet){var pct=Math.round(pSet[k]/maxP*100);html+='<div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:0.72rem"><span>'+k+'</span><span>'+pSet[k]+' jadwal</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+(PRODI_COLORS[k]||'#60a5fa')+'"></div></div></div>';}
   html+='</div></div>';
   c.innerHTML=html;
 }
@@ -291,7 +349,7 @@ function loadFromSheet(){
       var cur='',inQ=false;
       for(var j=0;j<raw.length;j++){
         var ch=raw[j];
-        if(ch==='"') inQ=!inQ;
+        if(ch==='\"') inQ=!inQ;
         else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}
         else cur+=ch;
       }
