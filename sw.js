@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jadwal-bingpro-v1';
+const CACHE_NAME = 'jadwal-bingpro-v3';
 const STATIC_ASSETS = ['index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -20,6 +20,19 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   // Network-first for Google Sheets data
   if (e.request.url.includes('google.com/spreadsheets')) {
+    e.respondWith(
+      fetch(e.request)
+        .then(resp => {
+          const clone = resp.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(e.request, clone));
+          return resp;
+        })
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
+  // Network-first for HTML (always get fresh version)
+  if (e.request.destination === 'document' || e.request.url.endsWith('/')) {
     e.respondWith(
       fetch(e.request)
         .then(resp => {
