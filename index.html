@@ -164,7 +164,8 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
     <span class="badge" id="storageInfo">💾 Lokal</span>
   </div>
   <div class="header-actions">
-    <a href="https://docs.google.com/forms/d/1Be0XkhoaM3JR29NYnufcUMXjbe-O5JI9vvrBraI3UX0/viewform" target="_blank" class="header-btn">📝 Form Input</a>
+    <a href="https://docs.google.com/forms/d/1Be0XkhoaM3JR29NYnufcUMXjbe-O5JI9vvrBraI3UX0/viewform" target="_blank" class="header-btn">📝 Input via Form</a>
+    <button class="header-btn" onclick="openAddForm()">✏️ Input Langsung</button>
     <button class="header-btn" onclick="exportData()">📤 Export</button>
     <button class="header-btn" onclick="document.getElementById('importFile').click()">📥 Import</button>
     <button class="header-btn" onclick="loadFromSheet()">🔄 Sync Sheet</button>
@@ -244,12 +245,16 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
     </div>
     <div class="form-group">
       <label class="form-label">Prodi</label>
-      <select class="form-select" id="fProdi">
-        <option value="">Pilih Prodi</option>
-        <option value="TPTP">TPTP</option><option value="BIKBP">BIKBP</option>
-        <option value="AGRIBISNIS">AGRIBISNIS</option><option value="HORTIKULTURA">HORTIKULTURA</option>
-        <option value="TRK">TRK</option><option value="TRP">TRP</option>
-      </select>
+      <input type="text" class="form-input" id="fProdi" placeholder="Pilih atau ketik prodi" list="prodiList">
+      <datalist id="prodiList">
+        <option value="TPTP"><option value="BIKBP"><option value="AGRIBISNIS">
+        <option value="HORTIKULTURA"><option value="TRK"><option value="TRP">
+        <option value="AKUAKULTUR"><option value="TEKNOLOGI HASIL PERTANIAN">
+        <option value="PENYULUHAN PERTANIAN"><option value="TEKNOLOGI PRODUKSI TANAMAN PANGAN">
+        <option value="TEKNOLOGI PRODUKSI HORTIKULTURA"><option value="TEKNOLOGI PRODUKSI PERKEBUNAN">
+        <option value="TEKNOLOGI MEKANISASI PERTANIAN"><option value="TEKNOLOGI PRODUKSI TERNAK">
+        <option value="MANAJEMEN AGRIBISNIS"><option value="TEKNOLOGI INFORMASI">
+      </datalist>
     </div>
     <div class="form-actions">
       <button class="form-btn form-btn-secondary" onclick="closeForm()">Batal</button>
@@ -263,9 +268,10 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
   <div class="modal" style="max-width:360px">
     <h3>🗑️ Hapus Jadwal?</h3>
     <p id="deleteInfo" style="text-align:center;font-size:0.85rem;color:#5a8ab8;margin-bottom:16px"></p>
+    <p style="text-align:center;font-size:0.7rem;color:#ef4444;margin-bottom:16px">⚠️ Jadwal akan dihapus permanen</p>
     <div class="form-actions">
       <button class="form-btn form-btn-secondary" onclick="closeDelete()">Batal</button>
-      <button class="form-btn form-btn-danger" onclick="confirmDelete()">🗑️ Hapus</button>
+      <button class="form-btn form-btn-danger" onclick="confirmDelete()">🗑️ Hapus Permanen</button>
     </div>
   </div>
 </div>
