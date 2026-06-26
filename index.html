@@ -35,7 +35,7 @@ body{font-family:'Inter',sans-serif;background:#e8f0fa;min-height:100vh;color:#1
 /* FILTERS */
 .filters{padding:0 16px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .filters::-webkit-scrollbar{display:none}
-.filter-btn{padding:5px 12px;border-radius:20px;border:1px solid #b8cfe8;background:#fff;color:#3d6a96;font-size:0.68rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s}
+.filter-btn{padding:5px 10px;border-radius:20px;border:1px solid #b8cfe8;background:#fff;color:#3d6a96;font-size:0.65rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s;max-width:120px;overflow:hidden;text-overflow:ellipsis}
 .filter-btn.active{background:#3a7bc8;border-color:#3a7bc8;color:#fff;font-weight:600}
 
 /* STATS */
@@ -161,7 +161,7 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
   <p>Politeknik Pertanian Negeri Payakumbuh</p>
   <div class="badge-row">
     <span class="badge" id="dataCount">Memuat...</span>
-    <span class="badge" id="storageInfo">💾 Lokal</span>
+    <span class="badge" id="storageInfo">💾 -</span>
   </div>
   <div class="header-actions">
     <a href="https://docs.google.com/forms/d/1Be0XkhoaM3JR29NYnufcUMXjbe-O5JI9vvrBraI3UX0/viewform" target="_blank" class="header-btn">📝 Input via Form</a>
@@ -170,6 +170,7 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
     <button class="header-btn" onclick="document.getElementById('importFile').click()">📥 Import</button>
     <button class="header-btn" onclick="loadFromSheet()">🔄 Sync Sheet</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    <button class="header-btn" onclick="resetData()">🔄 Reset</button>
   </div>
 </div>
 
@@ -275,6 +276,13 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
 
 <script>
 const STORAGE_KEY = 'jadwalDosenBINGPRO';
+
+function resetData() {
+  if (!confirm('Hapus semua data lokal dan sync ulang dari Google Sheet?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  allData = [];
+  loadFromSheet();
+}
 const SHEET_ID = '1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw';
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Form+Responses+1`;
 
@@ -322,7 +330,9 @@ function loadData() {
 
 function updateStorageInfo() {
   const el = document.getElementById('storageInfo');
-  el.textContent = `💾 ${allData.length} jadwal (lokal)`;
+  const saved = localStorage.getItem(STORAGE_KEY);
+  const count = saved ? JSON.parse(saved).length : 0;
+  el.textContent = `💾 ${count} tersimpan`;
 }
 
 // === CSV PARSER ===
@@ -422,7 +432,11 @@ function entryKey(d) {
 
 // === RENDER ===
 function renderFilters() {
-  const pros = [...new Set(allData.map(d => d.prodi).filter(Boolean))].sort();
+  const VALID_PRODI = ['TPTP','HORTIKULTURA','TEKBEN','PAG','AGRIBISNIS','PP','TRK','TMP','TAP','TP','TRP'];
+  const pros = [...new Set(allData.map(d => d.prodi).filter(Boolean))].sort((a,b) => {
+    const ia = VALID_PRODI.indexOf(a); const ib = VALID_PRODI.indexOf(b);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  });
   const dosens = [...new Set(allData.map(d => d.dosen).filter(Boolean))].sort();
   let html = '<button class="filter-btn active" onclick="setFilter(\'all\',this)">Semua</button>';
   pros.forEach(p => { html += `<button class="filter-btn" onclick="setFilter('prodi:${p}',this)">📚 ${p}</button>`; });
@@ -440,7 +454,8 @@ function renderStats() {
     <div class="stat"><div class="stat-num">${mc}</div><div class="stat-label">MK</div></div>
     <div class="stat"><div class="stat-num">${pc}</div><div class="stat-label">Prodi</div></div>
     <div class="stat"><div class="stat-num">${ts}</div><div class="stat-label">SKS</div></div>`;
-  document.getElementById('dataCount').textContent = `${allData.length} jadwal`;
+  document.getElementById('dataCount').textContent = `📅 ${allData.length} Jadwal`;
+  updateStorageInfo();
 }
 
 function getFilteredData() {
