@@ -189,14 +189,18 @@ function parseCSVRow(row) {
   return result;
 }
 
-// Parse the merged header row (first batch of form responses)
-function parseMergedHeaderRow(headerLabel) {
-  // The header contains: "FieldName val1 val2 val3..."
-  // Split by spaces but be smart about it
-  const parts = headerLabel.split(/\s+/);
-  // The first part is the field name, rest are values
-  return parts.slice(1);
+// Parse merged header label - strip known field name, return values array
+function parseMergedLabel(label, fieldName) {
+  if (!label || !fieldName) return [];
+  // Strip the field name prefix (case-insensitive)
+  const re = new RegExp('^' + fieldName.replace(/\s+/g, '\\s+') + '\\s+', 'i');
+  const rest = label.replace(re, '').trim();
+  if (!rest) return [];
+  return rest.split(/\s+/);
 }
+
+// Known field names in order (matching column positions)
+const FIELD_NAMES = ['Timestamp', 'Nama Dosen', 'Hari', 'Jam Mengajar', 'Mata Kuliah', 'SKS', 'Prodi', 'Kelas', 'Ruang Kelas', 'Minggu Mengajar', 'Column 11'];
 
 // Load data from Google Sheets
 async function loadFromSheet() {
@@ -208,21 +212,18 @@ async function loadFromSheet() {
     if (rows.length < 1) throw new Error('No data');
 
     const headers = parseCSVRow(rows[0]);
-    // headers[0] = "Timestamp val1 val2..."
-    // headers[1] = "Nama Dosen val1 val2..."
-    // etc.
 
-    // Parse the merged first batch from headers
-    const timestamps = parseMergedHeaderRow(headers[0]);
-    const dosenNames = parseMergedHeaderRow(headers[1]);
-    const hariList = parseMergedHeaderRow(headers[2]);
-    const jamList = parseMergedHeaderRow(headers[3]);
-    const mkList = parseMergedHeaderRow(headers[4]);
-    const sksList = parseMergedHeaderRow(headers[5]);
-    const prodiList = parseMergedHeaderRow(headers[6]);
-    const kelasList = parseMergedHeaderRow(headers[7]);
-    const ruangList = parseMergedHeaderRow(headers[8]);
-    const mingguList = parseMergedHeaderRow(headers[9]);
+    // Parse the merged first batch from headers using known field names
+    const timestamps = parseMergedLabel(headers[0], FIELD_NAMES[0]);
+    const dosenNames = parseMergedLabel(headers[1], FIELD_NAMES[1]);
+    const hariList = parseMergedLabel(headers[2], FIELD_NAMES[2]);
+    const jamList = parseMergedLabel(headers[3], FIELD_NAMES[3]);
+    const mkList = parseMergedLabel(headers[4], FIELD_NAMES[4]);
+    const sksList = parseMergedLabel(headers[5], FIELD_NAMES[5]);
+    const prodiList = parseMergedLabel(headers[6], FIELD_NAMES[6]);
+    const kelasList = parseMergedLabel(headers[7], FIELD_NAMES[7]);
+    const ruangList = parseMergedLabel(headers[8], FIELD_NAMES[8]);
+    const mingguList = parseMergedLabel(headers[9], FIELD_NAMES[9]);
 
     const firstBatchCount = Math.min(
       dosenNames.length, hariList.length, jamList.length,
