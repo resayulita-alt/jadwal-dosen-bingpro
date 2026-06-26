@@ -112,6 +112,10 @@ body.dark .table-view td{border-color:#223348;color:#c8d8ec}
 .form-link{display:inline-block;margin-top:10px;padding:8px 20px;background:rgba(255,255,255,0.2);color:#fff;text-decoration:none;border-radius:20px;font-size:0.75rem;font-weight:600;transition:0.2s;border:1px solid rgba(255,255,255,0.3)}
 .form-link:hover{background:rgba(255,255,255,0.3)}
 
+/* DELETE BUTTON */
+.delete-btn{background:none;border:none;font-size:0.85rem;cursor:pointer;padding:4px 6px;border-radius:6px;transition:0.2s;opacity:0.5}
+.delete-btn:hover{opacity:1;background:rgba(239,68,68,0.1)}
+
 /* VIEW TOGGLE */
 .view-toggle{display:flex;gap:4px;padding:0 16px 8px}
 .view-btn{padding:6px 12px;border-radius:8px;border:1px solid #b8cfe8;background:#fff;color:#3d6a96;font-size:0.7rem;cursor:pointer;font-family:inherit}
@@ -184,6 +188,26 @@ let currentView = 'card';
 let searchQuery = '';
 
 const DAY_ORDER = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+
+// Semester start date (Monday) - adjust if needed
+const SEMESTER_START = new Date(2026, 2, 2); // 2 March 2026
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+const DAY_TO_OFFSET = {'Senin':0,'Selasa':1,'Rabu':2,'Kamis':3,'Jumat':4,'Sabtu':5,'Minggu':6};
+
+function getWeekDates(minggu, hari) {
+  if (!minggu || !hari) return '';
+  const weekNum = parseInt(minggu.toString().split('-')[0]);
+  if (isNaN(weekNum) || weekNum < 1) return '';
+  const dayOffset = DAY_TO_OFFSET[hari];
+  if (dayOffset === undefined) return '';
+  // Calculate the Monday of that week
+  const monday = new Date(SEMESTER_START);
+  monday.setDate(monday.getDate() + (weekNum - 1) * 7);
+  // Calculate the specific day
+  const targetDate = new Date(monday);
+  targetDate.setDate(targetDate.getDate() + dayOffset);
+  return `${targetDate.getDate()} ${MONTH_NAMES[targetDate.getMonth()]}`;
+}
 
 // Parse CSV row handling quoted fields
 function parseCSVRow(row) {
@@ -312,7 +336,7 @@ function renderFilters() {
     html += `<button class="filter-btn" onclick="setFilter('dosen:${d}',this)">👩‍🏫 ${short}</button>`;
   });
 
-  document.getElementById('filterRow').innerHTML = html;
+  document.getElementById('filterRow').innerHTML = html + showHiddenCount();
 }
 
 // Render stats
@@ -333,6 +357,9 @@ function renderStats() {
 // Filter data
 function getFilteredData() {
   let filtered = allData;
+
+  // Remove hidden entries
+  filtered = filtered.filter(d => !hiddenEntries.includes(entryKey(d)));
 
   // Apply filter
   if (currentFilter.startsWith('prodi:')) {
@@ -389,11 +416,16 @@ function renderCards() {
   let html = '';
   sortedDays.forEach(day => {
     const entries = byDay[day].sort((a, b) => (a.jam || '').localeCompare(b.jam || ''));
-    html += `<div class="day-section"><div class="day-title">${getDayEmoji(day)} ${day}</div></div>`;
+    // Get date for this day from first entry's minggu
+    const sampleMinggu = entries[0] ? entries[0].minggu : '';
+    const dateStr = getWeekDates(sampleMinggu, day);
+    const dayLabel = dateStr ? `${getDayEmoji(day)} ${day}, ${dateStr}` : `${getDayEmoji(day)} ${day}`;
+    html += `<div class="day-section"><div class="day-title">${dayLabel}</div></div>`;
     html += '<div class="cards">';
     entries.forEach((d, idx) => {
+      const entryDate = getWeekDates(d.minggu, d.hari);
       html += `
-        <div class="card" onclick='showDetail(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
+        <div class="card">
           <div class="card-header">
             <span class="card-mk">${d.mk}</span>
             <span class="card-sks">${d.sks} SKS</span>
@@ -403,9 +435,14 @@ function renderCards() {
             <span class="card-tag"><span class="icon">🕐</span> ${d.jam}</span>
             <span class="card-tag"><span class="icon">🏫</span> ${d.ruang || '-'}</span>
             ${d.kelas ? `<span class="card-tag"><span class="icon">👥</span> Kelas ${d.kelas}</span>` : ''}
+            ${entryDate ? `<span class="card-tag"><span class="icon">📅</span> ${entryDate}</span>` : ''}
           </div>
-          ${d.prodi ? `<span class="card-prodi">${d.prodi}</span>` : ''}
-          ${d.minggu ? `<span class="card-prodi" style="margin-left:4px;background:rgba(16,185,129,0.15);color:#6ee7b7">Minggu ${d.minggu}</span>` : ''}
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+            ${d.prodi ? `<span class="card-prodi">${d.prodi}</span>` : ''}
+            ${d.minggu ? `<span class="card-prodi" style="background:rgba(16,185,129,0.12);color:#3a9d6d">Minggu ${d.minggu}</span>` : ''}
+            <span style="flex:1"></span>
+            <button class="delete-btn" onclick="event.stopPropagation();deleteEntry(${JSON.stringify(d).replace(/'/g,"&#39;")})" title="Hapus jadwal">🗑️</button>
+          </div>
         </div>`;
     });
     html += '</div>';
@@ -436,12 +473,14 @@ function renderTable() {
   });
 
   let html = '<div class="table-view"><table>';
-  html += '<thead><tr><th>Hari</th><th>Jam</th><th>Mata Kuliah</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th>Minggu</th></tr></thead><tbody>';
+  html += '<thead><tr><th>Hari</th><th>Tanggal</th><th>Jam</th><th>Mata Kuliah</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th>Minggu</th><th></th></tr></thead><tbody>';
   sorted.forEach(d => {
-    html += `<tr onclick='showDetail(${JSON.stringify(d).replace(/'/g,"&#39;")})' style="cursor:pointer">
-      <td>${d.hari}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td>
+    const entryDate = getWeekDates(d.minggu, d.hari) || '-';
+    html += `<tr>
+      <td>${d.hari}</td><td>${entryDate}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td>
       <td>${d.dosen}</td><td>${d.prodi || '-'}</td><td>${d.kelas || '-'}</td>
       <td>${d.ruang || '-'}</td><td>${d.minggu || '-'}</td>
+      <td><button class="delete-btn" onclick="deleteEntry(${JSON.stringify(d).replace(/'/g,"&#39;")})" title="Hapus">🗑️</button></td>
     </tr>`;
   });
   html += '</tbody></table></div>';
@@ -523,9 +562,45 @@ function shareWA() {
 // Refresh data
 async function refreshData() {
   document.getElementById('content').innerHTML = '<div class="loading"><div class="loading-spinner"></div><p style="margin-top:12px;font-size:0.8rem">Memuat ulang data...</p></div>';
+  hiddenEntries = JSON.parse(localStorage.getItem('hiddenJadwal') || '[]');
   await loadFromSheet();
   renderFilters();
   renderStats();
+  render();
+}
+
+// Delete entry (hide from view + open sheet for actual deletion)
+let hiddenEntries = JSON.parse(localStorage.getItem('hiddenJadwal') || '[]');
+
+function entryKey(d) {
+  return `${d.dosen}|${d.hari}|${d.jam}|${d.mk}`;
+}
+
+function deleteEntry(d) {
+  if (!confirm(`Hapus jadwal "${d.mk}" (${d.dosen}, ${d.hari} ${d.jam})?\n\nPilih OK untuk menyembunyikan dari tampilan.\nPilih BATAL untuk membuka Google Sheet (hapus manual).`)) {
+    // Open Google Sheet for manual deletion
+    window.open('https://docs.google.com/spreadsheets/d/1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw/edit#gid=0', '_blank');
+    return;
+  }
+  // Hide from view
+  const key = entryKey(d);
+  if (!hiddenEntries.includes(key)) {
+    hiddenEntries.push(key);
+    localStorage.setItem('hiddenJadwal', JSON.stringify(hiddenEntries));
+  }
+  render();
+}
+
+function showHiddenCount() {
+  if (hiddenEntries.length > 0) {
+    return `<button class="filter-btn" onclick="restoreAll()" style="background:rgba(239,68,68,0.15);border-color:#ef4444;color:#ef4444">🔄 Tampilkan ${hiddenEntries.length} tersembunyi</button>`;
+  }
+  return '';
+}
+
+function restoreAll() {
+  hiddenEntries = [];
+  localStorage.setItem('hiddenJadwal', '[]');
   render();
 }
 
