@@ -13,54 +13,98 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#e8f0fa;min-height:100vh;color:#1a2332}
+body{font-family:'Inter',sans-serif;background:#e8f0fa;min-height:100vh;color:#1a2332;padding-bottom:80px}
 
 /* HEADER */
 .header{background:linear-gradient(135deg,#4a80c4,#3a7bc8);padding:20px 16px 16px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 15px rgba(58,123,200,0.3)}
-.header h1{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:2px;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
-.header p{font-size:0.72rem;color:#c4d8f0}
+.header h1{font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:2px;text-shadow:0 1px 2px rgba(0,0,0,0.1)}
+.header p{font-size:0.7rem;color:#c4d8f0}
 .badge-row{display:flex;justify-content:center;gap:8px;margin-top:8px;flex-wrap:wrap}
-.badge{background:rgba(255,255,255,0.25);padding:3px 10px;border-radius:20px;font-size:0.65rem;color:#fff}
+.badge{background:rgba(255,255,255,0.25);padding:3px 10px;border-radius:20px;font-size:0.6rem;color:#fff}
+.header-actions{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.header-btn{padding:6px 14px;border-radius:16px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.15);color:#fff;font-size:0.65rem;cursor:pointer;font-family:inherit;font-weight:600;text-decoration:none;transition:0.2s}
+.header-btn:hover{background:rgba(255,255,255,0.25)}
 
 /* SEARCH */
-.search-box{padding:12px 16px;position:sticky;top:88px;z-index:99;background:#e8f0fa}
-.search-input{width:100%;padding:12px 16px 12px 44px;border-radius:12px;border:1px solid #b8cfe8;background:#fff;color:#1a2332;font-size:0.9rem;font-family:inherit;outline:none;transition:0.2s}
+.search-box{padding:10px 16px;position:sticky;top:120px;z-index:99;background:#e8f0fa}
+.search-input{width:100%;padding:10px 14px 10px 40px;border-radius:12px;border:1px solid #b8cfe8;background:#fff;color:#1a2332;font-size:0.85rem;font-family:inherit;outline:none;transition:0.2s}
 .search-input:focus{border-color:#3a7bc8;box-shadow:0 0 0 3px rgba(58,123,200,0.15)}
-.search-icon{position:absolute;left:28px;top:50%;transform:translateY(-50%);font-size:1rem;opacity:0.5}
+.search-icon{position:absolute;left:28px;top:50%;transform:translateY(-50%);font-size:0.9rem;opacity:0.5}
 .search-box{position:relative}
 
 /* FILTERS */
 .filters{padding:0 16px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .filters::-webkit-scrollbar{display:none}
-.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #b8cfe8;background:#fff;color:#3d6a96;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s}
+.filter-btn{padding:5px 12px;border-radius:20px;border:1px solid #b8cfe8;background:#fff;color:#3d6a96;font-size:0.68rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s}
 .filter-btn.active{background:#3a7bc8;border-color:#3a7bc8;color:#fff;font-weight:600}
-.filter-btn:hover{border-color:#3a7bc8;color:#2a5a8e}
 
 /* STATS */
-.stats{padding:8px 16px;display:flex;gap:8px;flex-wrap:wrap}
-.stat{background:#fff;border-radius:10px;padding:8px 12px;flex:1;min-width:100px;text-align:center;border:1px solid #c4d8f0}
-.stat-num{font-size:1.2rem;font-weight:800;color:#3a7bc8}
-.stat-label{font-size:0.6rem;color:#5a8ab8;margin-top:2px}
+.stats{padding:6px 16px;display:flex;gap:6px;flex-wrap:wrap}
+.stat{background:#fff;border-radius:10px;padding:8px 10px;flex:1;min-width:80px;text-align:center;border:1px solid #c4d8f0}
+.stat-num{font-size:1.1rem;font-weight:800;color:#3a7bc8}
+.stat-label{font-size:0.55rem;color:#5a8ab8;margin-top:2px}
+
+/* VIEW TOGGLE */
+.view-toggle{display:flex;gap:4px;padding:8px 16px 4px}
+.view-btn{padding:5px 10px;border-radius:8px;border:1px solid #b8cfe8;background:#fff;color:#3d6a96;font-size:0.65rem;cursor:pointer;font-family:inherit}
+.view-btn.active{background:#3a7bc8;border-color:#3a7bc8;color:#fff}
 
 /* CARDS */
-.cards{padding:8px 16px 24px}
-.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #c4d8f0;transition:0.2s;box-shadow:0 2px 8px rgba(58,123,200,0.08)}
-.card:hover{border-color:#3a7bc8;transform:translateY(-1px);box-shadow:0 4px 12px rgba(58,123,200,0.15)}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.card-mk{font-size:0.95rem;font-weight:700;color:#1a2332}
-.card-sks{background:#3a7bc8;color:#fff;padding:2px 8px;border-radius:8px;font-size:0.65rem;font-weight:700}
-.card-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.card-tag{background:#dce8f5;padding:4px 10px;border-radius:8px;font-size:0.7rem;color:#3d6a96;display:flex;align-items:center;gap:4px}
-.card-tag .icon{font-size:0.8rem}
-.card-dosen{font-size:0.78rem;font-weight:600;color:#3a7bc8;margin-top:6px}
-.card-prodi{display:inline-block;background:rgba(58,123,200,0.12);color:#3a7bc8;padding:2px 8px;border-radius:6px;font-size:0.65rem;margin-top:4px}
+.cards{padding:6px 16px 16px}
+.card{background:#fff;border-radius:14px;padding:12px;margin-bottom:8px;border:1px solid #c4d8f0;transition:0.2s;box-shadow:0 2px 8px rgba(58,123,200,0.08)}
+.card:hover{border-color:#3a7bc8;box-shadow:0 4px 12px rgba(58,123,200,0.15)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.card-mk{font-size:0.9rem;font-weight:700;color:#1a2332}
+.card-sks{background:#3a7bc8;color:#fff;padding:2px 8px;border-radius:8px;font-size:0.6rem;font-weight:700}
+.card-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+.card-tag{background:#dce8f5;padding:3px 8px;border-radius:8px;font-size:0.65rem;color:#3d6a96;display:flex;align-items:center;gap:3px}
+.card-dosen{font-size:0.75rem;font-weight:600;color:#3a7bc8;margin-top:5px}
+.card-prodi{display:inline-block;background:rgba(58,123,200,0.12);color:#3a7bc8;padding:2px 8px;border-radius:6px;font-size:0.6rem;margin-top:4px}
+.card-actions{display:flex;gap:4px;margin-top:8px;justify-content:flex-end}
+.card-btn{padding:5px 10px;border-radius:8px;border:none;font-size:0.65rem;cursor:pointer;font-family:inherit;font-weight:600;transition:0.2s}
+.card-btn-edit{background:#dbeafe;color:#2563eb}
+.card-btn-edit:hover{background:#bfdbfe}
+.card-btn-del{background:#fee2e2;color:#dc2626}
+.card-btn-del:hover{background:#fecaca}
 
 /* DAY SECTION */
-.day-section{padding:16px 16px 0}
-.day-title{font-size:0.85rem;font-weight:700;color:#3a7bc8;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.day-section{padding:12px 16px 0}
+.day-title{font-size:0.8rem;font-weight:700;color:#3a7bc8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
 .day-title::after{content:'';flex:1;height:1px;background:#b8cfe8}
 
-/* EMPTY STATE */
+/* TABLE VIEW */
+.table-wrap{padding:0 16px 16px;overflow-x:auto}
+.table-wrap table{width:100%;border-collapse:collapse;font-size:0.7rem;background:#fff;border-radius:10px;overflow:hidden}
+.table-wrap th{background:#3a7bc8;color:#fff;padding:7px 5px;text-align:left;font-weight:600;white-space:nowrap}
+.table-wrap td{padding:5px;border-bottom:1px solid #e8f0fa;color:#1a2332}
+.table-wrap tr:hover td{background:rgba(58,123,200,0.06)}
+
+/* FAB */
+.fab{position:fixed;bottom:20px;right:20px;width:52px;height:52px;border-radius:50%;background:#3a7bc8;border:none;color:#fff;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 15px rgba(58,123,200,0.4);z-index:100;display:flex;align-items:center;justify-content:center;transition:0.2s}
+.fab:hover{transform:scale(1.1);background:#2d6aa0}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal h3{font-size:1rem;color:#1a2332;margin-bottom:16px;text-align:center}
+.form-group{margin-bottom:12px}
+.form-label{font-size:0.7rem;color:#5a8ab8;font-weight:600;margin-bottom:4px;display:block}
+.form-input,.form-select{width:100%;padding:10px 12px;border:1px solid #b8cfe8;border-radius:10px;font-size:0.85rem;font-family:inherit;color:#1a2332;background:#fff;outline:none;transition:0.2s}
+.form-input:focus,.form-select:focus{border-color:#3a7bc8;box-shadow:0 0 0 3px rgba(58,123,200,0.12)}
+.form-row{display:flex;gap:8px}
+.form-row .form-group{flex:1}
+.form-actions{display:flex;gap:8px;margin-top:16px}
+.form-btn{flex:1;padding:12px;border-radius:12px;border:none;font-size:0.85rem;font-weight:700;cursor:pointer;font-family:inherit;transition:0.2s}
+.form-btn-primary{background:#3a7bc8;color:#fff}
+.form-btn-primary:hover{background:#2d6aa0}
+.form-btn-secondary{background:#e8f0fa;color:#3d6a96}
+.form-btn-secondary:hover{background:#dce8f5}
+.form-btn-danger{background:#dc2626;color:#fff}
+.form-btn-danger:hover{background:#b91c1c}
+
+/* EMPTY */
 .empty{text-align:center;padding:40px 16px;color:#5a8ab8}
 .empty-icon{font-size:2.5rem;margin-bottom:8px}
 .empty-text{font-size:0.85rem}
@@ -70,14 +114,14 @@ body{font-family:'Inter',sans-serif;background:#e8f0fa;min-height:100vh;color:#1
 .loading-spinner{display:inline-block;width:24px;height:24px;border:3px solid #c4d8f0;border-top-color:#3a7bc8;border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* SHARE BUTTON */
-.share-fab{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#25d366;border:none;color:#fff;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 15px rgba(37,211,102,0.4);z-index:100;display:flex;align-items:center;justify-content:center;transition:0.2s}
-.share-fab:hover{transform:scale(1.1)}
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a2332;color:#fff;padding:10px 20px;border-radius:12px;font-size:0.75rem;z-index:300;opacity:0;transition:0.3s;pointer-events:none}
+.toast.show{opacity:1}
 
-/* DARK MODE TOGGLE */
-.theme-toggle{position:fixed;bottom:20px;left:20px;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #b8cfe8;color:#3a7bc8;font-size:1rem;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+/* THEME TOGGLE */
+.theme-toggle{position:fixed;bottom:20px;left:20px;width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid #b8cfe8;color:#3a7bc8;font-size:0.9rem;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
 
-/* LIGHT MODE */
+/* DARK */
 body.dark{background:#0d1520;color:#c8d8ec}
 body.dark .header{background:linear-gradient(135deg,#1e3a5f,#173050)}
 body.dark .search-box{background:#0d1520}
@@ -95,48 +139,19 @@ body.dark .day-title::after{background:#223348}
 body.dark .filter-btn{border-color:#223348;background:transparent;color:#4a7a9e}
 body.dark .filter-btn.active{background:#3a7bc8;border-color:#3a7bc8;color:#fff}
 body.dark .theme-toggle{background:#15202e;border-color:#223348;color:#5a9ad8}
-body.dark .empty{color:#4a7a9e}
-body.dark .loading{color:#4a7a9e}
-body.dark .loading-spinner{border-color:#223348;border-top-color:#3a7bc8}
-body.dark .modal{background:#15202e;border-color:#223348}
+body.dark .view-btn{border-color:#223348;background:transparent;color:#4a7a9e}
+body.dark .view-btn.active{background:#3a7bc8;color:#fff}
+body.dark .table-wrap th{background:#1e3a5f}
+body.dark .table-wrap td{border-color:#223348;color:#c8d8ec}
+body.dark .table-wrap tr:hover td{background:rgba(58,123,200,0.08)}
+body.dark .modal{background:#15202e}
 body.dark .modal h3{color:#c8d8ec}
-body.dark .modal-value{color:#c8d8ec}
-body.dark .table-view th{background:#1e3a5f}
-body.dark .table-view td{border-color:#223348;color:#c8d8ec}
-
-/* REFRESH BUTTON */
-.refresh-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;padding:4px 10px;border-radius:12px;font-size:0.65rem;cursor:pointer;margin-left:8px}
-.refresh-btn:hover{background:rgba(255,255,255,0.35)}
-
-/* FORM LINK */
-.form-link{display:inline-block;margin-top:10px;padding:8px 20px;background:rgba(255,255,255,0.2);color:#fff;text-decoration:none;border-radius:20px;font-size:0.75rem;font-weight:600;transition:0.2s;border:1px solid rgba(255,255,255,0.3)}
-.form-link:hover{background:rgba(255,255,255,0.3)}
-
-/* DELETE BUTTON */
-.delete-btn{background:none;border:none;font-size:0.85rem;cursor:pointer;padding:4px 6px;border-radius:6px;transition:0.2s;opacity:0.5}
-.delete-btn:hover{opacity:1;background:rgba(239,68,68,0.1)}
-
-/* VIEW TOGGLE */
-.view-toggle{display:flex;gap:4px;padding:0 16px 8px}
-.view-btn{padding:6px 12px;border-radius:8px;border:1px solid #b8cfe8;background:#fff;color:#3d6a96;font-size:0.7rem;cursor:pointer;font-family:inherit}
-.view-btn.active{background:#3a7bc8;border-color:#3a7bc8;color:#fff}
-
-/* TABLE VIEW */
-.table-view{padding:0 16px 24px;overflow-x:auto}
-.table-view table{width:100%;border-collapse:collapse;font-size:0.75rem}
-.table-view th{background:#3a7bc8;color:#fff;padding:8px 6px;text-align:left;font-weight:600;position:sticky;top:0}
-.table-view td{padding:6px;border-bottom:1px solid #c4d8f0;color:#1a2332}
-.table-view tr:hover td{background:rgba(58,123,200,0.08)}
-
-/* DETAIL MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center;padding:16px}
-.modal-overlay.show{display:flex}
-.modal{background:#fff;border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;border:1px solid #c4d8f0}
-.modal h3{font-size:1rem;color:#1a2332;margin-bottom:12px}
-.modal-field{margin-bottom:8px}
-.modal-label{font-size:0.65rem;color:#64748b;text-transform:uppercase;letter-spacing:0.5px}
-.modal-value{font-size:0.85rem;color:#1a2332;margin-top:2px}
-.modal-close{width:100%;padding:10px;border-radius:10px;background:#3a7bc8;color:#fff;border:none;font-weight:600;cursor:pointer;margin-top:12px;font-family:inherit}
+body.dark .form-input,.dark .form-select{background:#1a2840;border-color:#223348;color:#c8d8ec}
+body.dark .form-label{color:#5a9ad8}
+body.dark .form-btn-secondary{background:#1a2840;color:#5a9ad8}
+body.dark .card-btn-edit{background:#1a2840;color:#5a9ad8}
+body.dark .card-btn-del{background:#2a1515;color:#f87171}
+body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255,255,0.1)}
 </style>
 </head>
 <body>
@@ -146,10 +161,15 @@ body.dark .table-view td{border-color:#223348;color:#c8d8ec}
   <p>Politeknik Pertanian Negeri Payakumbuh</p>
   <div class="badge-row">
     <span class="badge" id="dataCount">Memuat...</span>
-    <span class="badge" id="sheetStatus">📊 Menghubungkan...</span>
-    <button class="refresh-btn" onclick="refreshData()">🔄 Refresh</button>
+    <span class="badge" id="storageInfo">💾 Lokal</span>
   </div>
-  <a href="https://docs.google.com/forms/d/1Be0XkhoaM3JR29NYnufcUMXjbe-O5JI9vvrBraI3UX0/viewform" target="_blank" class="form-link">📝 Isi Jadwal Mengajar</a>
+  <div class="header-actions">
+    <a href="https://docs.google.com/forms/d/1Be0XkhoaM3JR29NYnufcUMXjbe-O5JI9vvrBraI3UX0/viewform" target="_blank" class="header-btn">📝 Form Input</a>
+    <button class="header-btn" onclick="exportData()">📤 Export</button>
+    <button class="header-btn" onclick="document.getElementById('importFile').click()">📥 Import</button>
+    <button class="header-btn" onclick="loadFromSheet()">🔄 Sync Sheet</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
 </div>
 
 <div class="search-box">
@@ -167,49 +187,142 @@ body.dark .table-view td{border-color:#223348;color:#c8d8ec}
 <div class="stats" id="statsRow"></div>
 
 <div id="content">
-  <div class="loading"><div class="loading-spinner"></div><p style="margin-top:12px;font-size:0.8rem">Memuat jadwal dari Google Sheets...</p></div>
+  <div class="loading"><div class="loading-spinner"></div><p style="margin-top:12px;font-size:0.8rem">Memuat data...</p></div>
 </div>
 
-<button class="share-fab" onclick="shareWA()" title="Bagikan ke WhatsApp">📱</button>
+<button class="fab" onclick="openAddForm()" title="Tambah Jadwal">＋</button>
 <button class="theme-toggle" onclick="toggleTheme()" title="Ganti tema">🌙</button>
+<div class="toast" id="toast"></div>
 
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal" id="modalContent"></div>
+<!-- ADD/EDIT MODAL -->
+<div class="modal-overlay" id="formModal" onclick="if(event.target===this)closeForm()">
+  <div class="modal">
+    <h3 id="formTitle">✏️ Tambah Jadwal</h3>
+    <input type="hidden" id="editIndex" value="-1">
+    <div class="form-group">
+      <label class="form-label">Mata Kuliah *</label>
+      <input type="text" class="form-input" id="fMK" placeholder="Contoh: Grammar, Reading, Speaking">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">SKS *</label>
+        <select class="form-select" id="fSKS"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kelas</label>
+        <input type="text" class="form-input" id="fKelas" placeholder="A, B, C">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Dosen *</label>
+      <input type="text" class="form-input" id="fDosen" placeholder="Nama dosen" list="dosenList">
+      <datalist id="dosenList"></datalist>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Hari *</label>
+        <select class="form-select" id="fHari">
+          <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
+          <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
+          <option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jam *</label>
+        <input type="text" class="form-input" id="fJam" placeholder="07.20-09.00">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Ruang</label>
+        <input type="text" class="form-input" id="fRuang" placeholder="R.14, Lab Kom">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Minggu</label>
+        <input type="text" class="form-input" id="fMinggu" placeholder="1-8, 16, 17">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Prodi</label>
+      <select class="form-select" id="fProdi">
+        <option value="">Pilih Prodi</option>
+        <option value="TPTP">TPTP</option><option value="BIKBP">BIKBP</option>
+        <option value="AGRIBISNIS">AGRIBISNIS</option><option value="HORTIKULTURA">HORTIKULTURA</option>
+        <option value="TRK">TRK</option><option value="TRP">TRP</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="form-btn form-btn-secondary" onclick="closeForm()">Batal</button>
+      <button class="form-btn form-btn-primary" onclick="saveEntry()">💾 Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteModal" onclick="if(event.target===this)closeDelete()">
+  <div class="modal" style="max-width:360px">
+    <h3>🗑️ Hapus Jadwal?</h3>
+    <p id="deleteInfo" style="text-align:center;font-size:0.85rem;color:#5a8ab8;margin-bottom:16px"></p>
+    <div class="form-actions">
+      <button class="form-btn form-btn-secondary" onclick="closeDelete()">Batal</button>
+      <button class="form-btn form-btn-danger" onclick="confirmDelete()">🗑️ Hapus</button>
+    </div>
+  </div>
 </div>
 
 <script>
+const STORAGE_KEY = 'jadwalDosenBINGPRO';
 const SHEET_ID = '1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw';
-const SHEET_NAME = 'Form Responses 1';
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Form+Responses+1`;
+
+const DAY_ORDER = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+const SEMESTER_START = new Date(2026, 2, 2);
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
+const DAY_TO_OFFSET = {'Senin':0,'Selasa':1,'Rabu':2,'Kamis':3,'Jumat':4,'Sabtu':5,'Minggu':6};
 
 let allData = [];
 let currentFilter = 'all';
 let currentView = 'card';
 let searchQuery = '';
+let deleteIdx = -1;
 
-const DAY_ORDER = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
-
-// Semester start date (Monday) - adjust if needed
-const SEMESTER_START = new Date(2026, 2, 2); // 2 March 2026
-const MONTH_NAMES = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-const DAY_TO_OFFSET = {'Senin':0,'Selasa':1,'Rabu':2,'Kamis':3,'Jumat':4,'Sabtu':5,'Minggu':6};
-
+// === DATE HELPERS ===
 function getWeekDates(minggu, hari) {
   if (!minggu || !hari) return '';
   const weekNum = parseInt(minggu.toString().split('-')[0]);
   if (isNaN(weekNum) || weekNum < 1) return '';
   const dayOffset = DAY_TO_OFFSET[hari];
   if (dayOffset === undefined) return '';
-  // Calculate the Monday of that week
   const monday = new Date(SEMESTER_START);
   monday.setDate(monday.getDate() + (weekNum - 1) * 7);
-  // Calculate the specific day
-  const targetDate = new Date(monday);
-  targetDate.setDate(targetDate.getDate() + dayOffset);
-  return `${targetDate.getDate()} ${MONTH_NAMES[targetDate.getMonth()]}`;
+  const d = new Date(monday);
+  d.setDate(d.getDate() + dayOffset);
+  return `${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
 }
 
-// Parse CSV row handling quoted fields
+// === STORAGE ===
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+  updateStorageInfo();
+}
+
+function loadData() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      allData = JSON.parse(saved);
+      if (allData.length > 0) return true;
+    } catch(e) {}
+  }
+  return false;
+}
+
+function updateStorageInfo() {
+  const el = document.getElementById('storageInfo');
+  el.textContent = `💾 ${allData.length} jadwal (lokal)`;
+}
+
+// === CSV PARSER ===
 function parseCSVRow(row) {
   const result = [];
   let current = '';
@@ -224,32 +337,27 @@ function parseCSVRow(row) {
   return result;
 }
 
-// Parse merged header label - strip known field name, return values array
-function parseMergedLabel(label, fieldName) {
-  if (!label || !fieldName) return [];
-  // Strip the field name prefix (case-insensitive)
-  const re = new RegExp('^' + fieldName.replace(/\s+/g, '\\s+') + '\\s+', 'i');
-  const rest = label.replace(re, '').trim();
-  if (!rest) return [];
-  return rest.split(/\s+/);
-}
-
-// Known field names in order (matching column positions)
-const FIELD_NAMES = ['Timestamp', 'Nama Dosen', 'Hari', 'Jam Mengajar', 'Mata Kuliah', 'SKS', 'Prodi', 'Kelas', 'Ruang Kelas', 'Minggu Mengajar', 'Column 11'];
-
-// Load data from Google Sheets
+// === LOAD FROM GOOGLE SHEETS ===
 async function loadFromSheet() {
+  showToast('🔄 Mengambil data dari Google Sheets...');
   try {
     const resp = await fetch(SHEET_URL);
-    if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const csv = await resp.text();
     const rows = csv.split('\n').filter(r => r.trim());
     if (rows.length < 1) throw new Error('No data');
 
     const headers = parseCSVRow(rows[0]);
+    const FIELD_NAMES = ['Timestamp','Nama Dosen','Hari','Jam Mengajar','Mata Kuliah','SKS','Prodi','Kelas','Ruang Kelas','Minggu Mengajar','Column 11'];
 
-    // Parse the merged first batch from headers using known field names
-    const timestamps = parseMergedLabel(headers[0], FIELD_NAMES[0]);
+    function parseMergedLabel(label, fieldName) {
+      if (!label || !fieldName) return [];
+      const re = new RegExp('^' + fieldName.replace(/\s+/g, '\\s+') + '\\s+', 'i');
+      const rest = label.replace(re, '').trim();
+      if (!rest) return [];
+      return rest.split(/\s+/);
+    }
+
     const dosenNames = parseMergedLabel(headers[1], FIELD_NAMES[1]);
     const hariList = parseMergedLabel(headers[2], FIELD_NAMES[2]);
     const jamList = parseMergedLabel(headers[3], FIELD_NAMES[3]);
@@ -260,376 +368,314 @@ async function loadFromSheet() {
     const ruangList = parseMergedLabel(headers[8], FIELD_NAMES[8]);
     const mingguList = parseMergedLabel(headers[9], FIELD_NAMES[9]);
 
-    const firstBatchCount = Math.min(
-      dosenNames.length, hariList.length, jamList.length,
-      mkList.length, sksList.length, prodiList.length,
-      kelasList.length, ruangList.length, mingguList.length
-    );
+    const count = Math.min(dosenNames.length, hariList.length, jamList.length, mkList.length, sksList.length);
+    const sheetData = [];
 
-    const data = [];
-
-    // First batch from headers
-    for (let i = 0; i < firstBatchCount; i++) {
+    for (let i = 0; i < count; i++) {
       const mk = mkList[i] || '';
       if (!mk || mk.toLowerCase() === 'mata kuliah') continue;
-      data.push({
-        dosen: dosenNames[i] || '',
-        hari: hariList[i] || '',
-        jam: jamList[i] || '',
-        mk: mk,
-        sks: sksList[i] || '',
-        prodi: prodiList[i] || '',
-        kelas: kelasList[i] || '',
-        ruang: ruangList[i] || '',
-        minggu: mingguList[i] || ''
+      sheetData.push({
+        dosen: dosenNames[i]||'', hari: hariList[i]||'', jam: jamList[i]||'',
+        mk, sks: sksList[i]||'2', prodi: prodiList[i]||'',
+        kelas: kelasList[i]||'', ruang: ruangList[i]||'', minggu: mingguList[i]||''
       });
     }
 
-    // Subsequent rows (individual entries)
     for (let i = 1; i < rows.length; i++) {
       const cols = parseCSVRow(rows[i]);
       if (cols.length < 5 || !cols[1]) continue;
-      // Skip if MK is empty
       const mk = cols[4] || '';
       if (!mk || mk.toLowerCase() === 'mata kuliah') continue;
-      data.push({
-        dosen: cols[1] || '',
-        hari: cols[2] || '',
-        jam: cols[3] || '',
-        mk: mk,
-        sks: cols[5] || '',
-        prodi: cols[6] || cols[10] || '',  // col 10 is Column 11 (prodi for some)
-        kelas: cols[7] || '',
-        ruang: cols[8] || '',
-        minggu: cols[9] || ''
+      sheetData.push({
+        dosen: cols[1]||'', hari: cols[2]||'', jam: cols[3]||'',
+        mk, sks: cols[5]||'2', prodi: cols[6]||cols[10]||'',
+        kelas: cols[7]||'', ruang: cols[8]||'', minggu: cols[9]||''
       });
     }
 
-    if (data.length > 0) {
-      allData = data;
-      document.getElementById('sheetStatus').textContent = '📊 Live dari Google Sheets';
-      console.log('Loaded ' + data.length + ' entries from Google Sheets');
+    if (sheetData.length > 0) {
+      // Merge: keep local entries not in sheet, add sheet entries
+      const localKeys = new Set(allData.map(d => entryKey(d)));
+      const sheetKeys = new Set(sheetData.map(d => entryKey(d)));
+      // Keep local-only entries
+      const localOnly = allData.filter(d => !sheetKeys.has(entryKey(d)));
+      allData = [...sheetData, ...localOnly];
+      saveData();
+      showToast(`✅ ${sheetData.length} jadwal dari Sheet`);
+      renderFilters();
+      renderStats();
+      render();
       return true;
     }
   } catch(e) {
-    console.log('Google Sheet error: ' + e.message);
-    document.getElementById('sheetStatus').textContent = '⚠️ Gagal memuat';
+    showToast('❌ Gagal sync: ' + e.message);
   }
   return false;
 }
-
-// Render filters
-function renderFilters() {
-  const pros = [...new Set(allData.map(d => d.prodi).filter(Boolean))].sort();
-  const dosens = [...new Set(allData.map(d => d.dosen).filter(Boolean))].sort();
-
-  let html = '<button class="filter-btn active" onclick="setFilter(\'all\',this)">Semua</button>';
-
-  // Prodi filters
-  pros.forEach(p => {
-    html += `<button class="filter-btn" onclick="setFilter('prodi:${p}',this)">📚 ${p}</button>`;
-  });
-
-  // Dosen filters
-  dosens.forEach(d => {
-    const short = d.split(' ').slice(0, 2).join(' ');
-    html += `<button class="filter-btn" onclick="setFilter('dosen:${d}',this)">👩‍🏫 ${short}</button>`;
-  });
-
-  document.getElementById('filterRow').innerHTML = html + showHiddenCount();
-}
-
-// Render stats
-function renderStats() {
-  const dosenCount = new Set(allData.map(d => d.dosen)).size;
-  const mkCount = new Set(allData.map(d => d.mk)).size;
-  const prodiCount = new Set(allData.map(d => d.prodi)).size;
-  const totalSKS = allData.reduce((sum, d) => sum + (parseInt(d.sks) || 0), 0);
-
-  document.getElementById('statsRow').innerHTML = `
-    <div class="stat"><div class="stat-num">${dosenCount}</div><div class="stat-label">Dosen</div></div>
-    <div class="stat"><div class="stat-num">${mkCount}</div><div class="stat-label">Mata Kuliah</div></div>
-    <div class="stat"><div class="stat-num">${prodiCount}</div><div class="stat-label">Prodi</div></div>
-    <div class="stat"><div class="stat-num">${totalSKS}</div><div class="stat-label">Total SKS</div></div>
-  `;
-}
-
-// Filter data
-function getFilteredData() {
-  let filtered = allData;
-
-  // Remove hidden entries
-  filtered = filtered.filter(d => !hiddenEntries.includes(entryKey(d)));
-
-  // Apply filter
-  if (currentFilter.startsWith('prodi:')) {
-    const p = currentFilter.split(':')[1];
-    filtered = filtered.filter(d => d.prodi === p);
-  } else if (currentFilter.startsWith('dosen:')) {
-    const dn = currentFilter.split(':').slice(1).join(':');
-    filtered = filtered.filter(d => d.dosen === dn);
-  }
-
-  // Apply search
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    filtered = filtered.filter(d =>
-      (d.dosen || '').toLowerCase().includes(q) ||
-      (d.mk || '').toLowerCase().includes(q) ||
-      (d.ruang || '').toLowerCase().includes(q) ||
-      (d.prodi || '').toLowerCase().includes(q) ||
-      (d.kelas || '').toLowerCase().includes(q) ||
-      (d.hari || '').toLowerCase().includes(q)
-    );
-  }
-
-  return filtered;
-}
-
-// Render card view
-function renderCards() {
-  const filtered = getFilteredData();
-  if (filtered.length === 0) {
-    document.getElementById('content').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">📭</div>
-        <div class="empty-text">Tidak ada jadwal ditemukan</div>
-      </div>`;
-    return;
-  }
-
-  // Group by day
-  const byDay = {};
-  filtered.forEach(d => {
-    const day = d.hari || 'Tidak Diketahui';
-    if (!byDay[day]) byDay[day] = [];
-    byDay[day].push(d);
-  });
-
-  // Sort by day order
-  const sortedDays = Object.keys(byDay).sort((a, b) => {
-    const ia = DAY_ORDER.indexOf(a);
-    const ib = DAY_ORDER.indexOf(b);
-    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-  });
-
-  let html = '';
-  sortedDays.forEach(day => {
-    const entries = byDay[day].sort((a, b) => (a.jam || '').localeCompare(b.jam || ''));
-    // Get date for this day from first entry's minggu
-    const sampleMinggu = entries[0] ? entries[0].minggu : '';
-    const dateStr = getWeekDates(sampleMinggu, day);
-    const dayLabel = dateStr ? `${getDayEmoji(day)} ${day}, ${dateStr}` : `${getDayEmoji(day)} ${day}`;
-    html += `<div class="day-section"><div class="day-title">${dayLabel}</div></div>`;
-    html += '<div class="cards">';
-    entries.forEach((d, idx) => {
-      const entryDate = getWeekDates(d.minggu, d.hari);
-      const ek = btoa(entryKey(d));
-      html += `
-        <div class="card">
-          <div class="card-header">
-            <span class="card-mk">${d.mk}</span>
-            <span class="card-sks">${d.sks} SKS</span>
-          </div>
-          <div class="card-dosen">👩‍🏫 ${d.dosen}</div>
-          <div class="card-row">
-            <span class="card-tag"><span class="icon">🕐</span> ${d.jam}</span>
-            <span class="card-tag"><span class="icon">🏫</span> ${d.ruang || '-'}</span>
-            ${d.kelas ? `<span class="card-tag"><span class="icon">👥</span> Kelas ${d.kelas}</span>` : ''}
-            ${entryDate ? `<span class="card-tag"><span class="icon">📅</span> ${entryDate}</span>` : ''}
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
-            ${d.prodi ? `<span class="card-prodi">${d.prodi}</span>` : ''}
-            ${d.minggu ? `<span class="card-prodi" style="background:rgba(16,185,129,0.12);color:#3a9d6d">Minggu ${d.minggu}</span>` : ''}
-            <span style="flex:1"></span>
-            <button class="delete-btn" onclick="deleteEntry('${ek}')" title="Hapus jadwal">🗑️</button>
-          </div>
-        </div>`;
-    });
-    html += '</div>';
-  });
-
-  document.getElementById('content').innerHTML = html;
-  document.getElementById('dataCount').textContent = `${filtered.length} jadwal`;
-}
-
-// Render table view
-function renderTable() {
-  const filtered = getFilteredData();
-  if (filtered.length === 0) {
-    document.getElementById('content').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">📭</div>
-        <div class="empty-text">Tidak ada jadwal ditemukan</div>
-      </div>`;
-    return;
-  }
-
-  // Sort by day then time
-  const sorted = [...filtered].sort((a, b) => {
-    const da = DAY_ORDER.indexOf(a.hari);
-    const db = DAY_ORDER.indexOf(b.hari);
-    if (da !== db) return (da === -1 ? 99 : da) - (db === -1 ? 99 : db);
-    return (a.jam || '').localeCompare(b.jam || '');
-  });
-
-  let html = '<div class="table-view"><table>';
-  html += '<thead><tr><th>Hari</th><th>Tanggal</th><th>Jam</th><th>Mata Kuliah</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th>Minggu</th><th></th></tr></thead><tbody>';
-  sorted.forEach((d, idx) => {
-    const entryDate = getWeekDates(d.minggu, d.hari) || '-';
-    const ek = btoa(entryKey(d));
-    html += `<tr>
-      <td>${d.hari}</td><td>${entryDate}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td>
-      <td>${d.dosen}</td><td>${d.prodi || '-'}</td><td>${d.kelas || '-'}</td>
-      <td>${d.ruang || '-'}</td><td>${d.minggu || '-'}</td>
-      <td><button class="delete-btn" onclick="deleteEntry('${ek}')" title="Hapus">🗑️</button></td>
-    </tr>`;
-  });
-  html += '</tbody></table></div>';
-
-  document.getElementById('content').innerHTML = html;
-  document.getElementById('dataCount').textContent = `${filtered.length} jadwal`;
-}
-
-// Render based on current view
-function render() {
-  if (currentView === 'card') renderCards();
-  else renderTable();
-}
-
-// Set filter
-function setFilter(filter, btn) {
-  currentFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  render();
-}
-
-// Set view
-function setView(view) {
-  currentView = view;
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.view-btn').forEach(b => {
-    if ((view === 'card' && b.textContent.includes('Kartu')) ||
-        (view === 'table' && b.textContent.includes('Tabel'))) {
-      b.classList.add('active');
-    }
-  });
-  render();
-}
-
-// Show detail modal
-function showDetail(d) {
-  const modal = document.getElementById('modalContent');
-  modal.innerHTML = `
-    <h3>${d.mk}</h3>
-    <div class="modal-field"><div class="modal-label">Dosen</div><div class="modal-value">👩‍🏫 ${d.dosen}</div></div>
-    <div class="modal-field"><div class="modal-label">Hari & Jam</div><div class="modal-value">📅 ${d.hari}, ${d.jam}</div></div>
-    <div class="modal-field"><div class="modal-label">SKS</div><div class="modal-value">${d.sks} SKS</div></div>
-    <div class="modal-field"><div class="modal-label">Prodi</div><div class="modal-value">📚 ${d.prodi || '-'}</div></div>
-    <div class="modal-field"><div class="modal-label">Kelas</div><div class="modal-value">👥 ${d.kelas || '-'}</div></div>
-    <div class="modal-field"><div class="modal-label">Ruang</div><div class="modal-value">🏫 ${d.ruang || '-'}</div></div>
-    <div class="modal-field"><div class="modal-label">Minggu Mengajar</div><div class="modal-value">📆 ${d.minggu || '-'}</div></div>
-    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('show')">Tutup</button>
-  `;
-  document.getElementById('modalOverlay').classList.add('show');
-}
-
-function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) {
-    document.getElementById('modalOverlay').classList.remove('show');
-  }
-}
-
-// Get day emoji
-function getDayEmoji(day) {
-  const emojis = {'Senin':'🟢','Selasa':'🔵','Rabu':'🟡','Kamis':'🟠','Jumat':'🟣','Sabtu':'🔴','Minggu':'⚪'};
-  return emojis[day] || '📅';
-}
-
-// Toggle theme
-function toggleTheme() {
-  document.body.classList.toggle('dark');
-  const isDark = document.body.classList.contains('dark');
-  document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-}
-
-// Share to WhatsApp
-function shareWA() {
-  const text = encodeURIComponent('📅 Jadwal Dosen BINGPRO — Politeknik Pertanian Negeri Payakumbuh\n\nAplikasi jadwal mengajar dosen BINGPRO.\n' + allData.length + ' jadwal tersedia.\n\n' + window.location.href);
-  window.open(`https://wa.me/?text=${text}`, '_blank');
-}
-
-// Refresh data
-async function refreshData() {
-  document.getElementById('content').innerHTML = '<div class="loading"><div class="loading-spinner"></div><p style="margin-top:12px;font-size:0.8rem">Memuat ulang data...</p></div>';
-  hiddenEntries = JSON.parse(localStorage.getItem('hiddenJadwal') || '[]');
-  await loadFromSheet();
-  renderFilters();
-  renderStats();
-  render();
-}
-
-// Delete entry (hide from view + open sheet for actual deletion)
-let hiddenEntries = JSON.parse(localStorage.getItem('hiddenJadwal') || '[]');
 
 function entryKey(d) {
   return `${d.dosen}|${d.hari}|${d.jam}|${d.mk}`;
 }
 
-function deleteEntry(encoded) {
-  if (!encoded) return;
-  let key;
-  try { key = atob(encoded); } catch(e) { return; }
-  const parts = key.split('|');
-  const mk = parts[3] || '';
-  const dosen = parts[0] || '';
-  const hari = parts[1] || '';
-  const jam = parts[2] || '';
-  const msg = `Hapus jadwal "${mk}" (${dosen}, ${hari} ${jam})?\n\nOK = Sembunyikan dari tampilan\nBATAL = Buka Google Sheet (hapus manual)`;
-  if (!confirm(msg)) {
-    window.open('https://docs.google.com/spreadsheets/d/1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw/edit#gid=0', '_blank');
+// === RENDER ===
+function renderFilters() {
+  const pros = [...new Set(allData.map(d => d.prodi).filter(Boolean))].sort();
+  const dosens = [...new Set(allData.map(d => d.dosen).filter(Boolean))].sort();
+  let html = '<button class="filter-btn active" onclick="setFilter(\'all\',this)">Semua</button>';
+  pros.forEach(p => { html += `<button class="filter-btn" onclick="setFilter('prodi:${p}',this)">📚 ${p}</button>`; });
+  dosens.forEach(d => { const s = d.split(' ').slice(0,2).join(' '); html += `<button class="filter-btn" onclick="setFilter('dosen:${d}',this)">👩‍🏫 ${s}</button>`; });
+  document.getElementById('filterRow').innerHTML = html;
+}
+
+function renderStats() {
+  const dc = new Set(allData.map(d=>d.dosen)).size;
+  const mc = new Set(allData.map(d=>d.mk)).size;
+  const pc = new Set(allData.map(d=>d.prodi)).size;
+  const ts = allData.reduce((s,d) => s+(parseInt(d.sks)||0),0);
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat"><div class="stat-num">${dc}</div><div class="stat-label">Dosen</div></div>
+    <div class="stat"><div class="stat-num">${mc}</div><div class="stat-label">MK</div></div>
+    <div class="stat"><div class="stat-num">${pc}</div><div class="stat-label">Prodi</div></div>
+    <div class="stat"><div class="stat-num">${ts}</div><div class="stat-label">SKS</div></div>`;
+  document.getElementById('dataCount').textContent = `${allData.length} jadwal`;
+}
+
+function getFilteredData() {
+  let f = allData;
+  if (currentFilter.startsWith('prodi:')) f = f.filter(d => d.prodi === currentFilter.split(':')[1]);
+  else if (currentFilter.startsWith('dosen:')) f = f.filter(d => d.dosen === currentFilter.split(':').slice(1).join(':'));
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    f = f.filter(d => [d.dosen,d.mk,d.ruang,d.prodi,d.kelas,d.hari].some(v => (v||'').toLowerCase().includes(q)));
+  }
+  return f;
+}
+
+function getDayEmoji(day) {
+  return {'Senin':'🟢','Selasa':'🔵','Rabu':'🟡','Kamis':'🟠','Jumat':'🟣','Sabtu':'🔴','Minggu':'⚪'}[day]||'📅';
+}
+
+function renderCards() {
+  const filtered = getFilteredData();
+  if (!filtered.length) {
+    document.getElementById('content').innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Belum ada jadwal. Klik ＋ untuk menambah.</div></div>';
     return;
   }
-  if (!hiddenEntries.includes(key)) {
-    hiddenEntries.push(key);
-    localStorage.setItem('hiddenJadwal', JSON.stringify(hiddenEntries));
+  const byDay = {};
+  filtered.forEach(d => { const day = d.hari||'?'; if(!byDay[day]) byDay[day]=[]; byDay[day].push(d); });
+  const sortedDays = Object.keys(byDay).sort((a,b) => (DAY_ORDER.indexOf(a)+1||99)-(DAY_ORDER.indexOf(b)+1||99));
+  let html = '';
+  sortedDays.forEach(day => {
+    const entries = byDay[day].sort((a,b) => (a.jam||'').localeCompare(b.jam||''));
+    const sampleM = entries[0] ? entries[0].minggu : '';
+    const dateStr = getWeekDates(sampleM, day);
+    const label = dateStr ? `${getDayEmoji(day)} ${day}, ${dateStr}` : `${getDayEmoji(day)} ${day}`;
+    html += `<div class="day-section"><div class="day-title">${label}</div></div><div class="cards">`;
+    entries.forEach(d => {
+      const idx = allData.indexOf(d);
+      const ed = getWeekDates(d.minggu, d.hari);
+      html += `<div class="card">
+        <div class="card-header"><span class="card-mk">${d.mk}</span><span class="card-sks">${d.sks} SKS</span></div>
+        <div class="card-dosen">👩‍🏫 ${d.dosen}</div>
+        <div class="card-row">
+          <span class="card-tag">🕐 ${d.jam}</span>
+          <span class="card-tag">🏫 ${d.ruang||'-'}</span>
+          ${d.kelas?`<span class="card-tag">👥 ${d.kelas}</span>`:''}
+          ${ed?`<span class="card-tag">📅 ${ed}</span>`:''}
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap">
+          ${d.prodi?`<span class="card-prodi">${d.prodi}</span>`:''}
+          ${d.minggu?`<span class="card-prodi" style="background:rgba(16,185,129,0.12);color:#3a9d6d">Minggu ${d.minggu}</span>`:''}
+          <span style="flex:1"></span>
+          <button class="card-btn card-btn-edit" onclick="openEditForm(${idx})">✏️ Edit</button>
+          <button class="card-btn card-btn-del" onclick="openDelete(${idx})">🗑️</button>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('content').innerHTML = html;
+}
+
+function renderTable() {
+  const filtered = getFilteredData();
+  if (!filtered.length) {
+    document.getElementById('content').innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Belum ada jadwal</div></div>';
+    return;
   }
-  render();
+  const sorted = [...filtered].sort((a,b) => {
+    const d = (DAY_ORDER.indexOf(a.hari)+1||99)-(DAY_ORDER.indexOf(b.hari)+1||99);
+    return d || (a.jam||'').localeCompare(b.jam||'');
+  });
+  let html = '<div class="table-wrap"><table><thead><tr><th>Hari</th><th>Tgl</th><th>Jam</th><th>MK</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th>Mg</th><th></th></tr></thead><tbody>';
+  sorted.forEach(d => {
+    const idx = allData.indexOf(d);
+    const ed = getWeekDates(d.minggu, d.hari)||'-';
+    html += `<tr><td>${d.hari}</td><td>${ed}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td><td>${d.dosen}</td><td>${d.prodi||'-'}</td><td>${d.kelas||'-'}</td><td>${d.ruang||'-'}</td><td>${d.minggu||'-'}</td><td><button class="card-btn card-btn-edit" onclick="openEditForm(${idx})" style="padding:3px 6px;font-size:0.6rem">✏️</button> <button class="card-btn card-btn-del" onclick="openDelete(${idx})" style="padding:3px 6px;font-size:0.6rem">🗑️</button></td></tr>`;
+  });
+  html += '</tbody></table></div>';
+  document.getElementById('content').innerHTML = html;
 }
 
-function showHiddenCount() {
-  if (hiddenEntries.length > 0) {
-    return `<button class="filter-btn" onclick="restoreAll()" style="background:rgba(239,68,68,0.15);border-color:#ef4444;color:#ef4444">🔄 Tampilkan ${hiddenEntries.length} tersembunyi</button>`;
+function render() { currentView==='card' ? renderCards() : renderTable(); }
+function setFilter(f, btn) { currentFilter=f; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); if(btn)btn.classList.add('active'); render(); }
+function setView(v) { currentView=v; document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.view-btn').forEach(b=>{if((v==='card'&&b.textContent.includes('Kartu'))||(v==='table'&&b.textContent.includes('Tabel')))b.classList.add('active')}); render(); }
+
+// === ADD/EDIT FORM ===
+function openAddForm() {
+  document.getElementById('editIndex').value = -1;
+  document.getElementById('formTitle').textContent = '✏️ Tambah Jadwal';
+  document.getElementById('fMK').value = '';
+  document.getElementById('fSKS').value = '2';
+  document.getElementById('fKelas').value = '';
+  document.getElementById('fDosen').value = '';
+  document.getElementById('fHari').value = 'Senin';
+  document.getElementById('fJam').value = '';
+  document.getElementById('fRuang').value = '';
+  document.getElementById('fMinggu').value = '';
+  document.getElementById('fProdi').value = '';
+  updateDosenList();
+  document.getElementById('formModal').classList.add('show');
+}
+
+function openEditForm(idx) {
+  const d = allData[idx];
+  if (!d) return;
+  document.getElementById('editIndex').value = idx;
+  document.getElementById('formTitle').textContent = '✏️ Edit Jadwal';
+  document.getElementById('fMK').value = d.mk;
+  document.getElementById('fSKS').value = d.sks;
+  document.getElementById('fKelas').value = d.kelas;
+  document.getElementById('fDosen').value = d.dosen;
+  document.getElementById('fHari').value = d.hari;
+  document.getElementById('fJam').value = d.jam;
+  document.getElementById('fRuang').value = d.ruang;
+  document.getElementById('fMinggu').value = d.minggu;
+  document.getElementById('fProdi').value = d.prodi;
+  updateDosenList();
+  document.getElementById('formModal').classList.add('show');
+}
+
+function updateDosenList() {
+  const dosens = [...new Set(allData.map(d=>d.dosen).filter(Boolean))].sort();
+  document.getElementById('dosenList').innerHTML = dosens.map(d=>`<option value="${d}">`).join('');
+}
+
+function closeForm() { document.getElementById('formModal').classList.remove('show'); }
+
+function saveEntry() {
+  const mk = document.getElementById('fMK').value.trim();
+  const dosen = document.getElementById('fDosen').value.trim();
+  const hari = document.getElementById('fHari').value;
+  const jam = document.getElementById('fJam').value.trim();
+  if (!mk || !dosen || !jam) { showToast('❌ Isi MK, Dosen, dan Jam!'); return; }
+  const entry = {
+    mk, sks: document.getElementById('fSKS').value,
+    kelas: document.getElementById('fKelas').value.trim(),
+    dosen, hari, jam,
+    ruang: document.getElementById('fRuang').value.trim(),
+    minggu: document.getElementById('fMinggu').value.trim(),
+    prodi: document.getElementById('fProdi').value
+  };
+  const idx = parseInt(document.getElementById('editIndex').value);
+  if (idx >= 0) {
+    allData[idx] = entry;
+    showToast('✅ Jadwal diperbarui');
+  } else {
+    allData.push(entry);
+    showToast('✅ Jadwal ditambahkan');
   }
-  return '';
-}
-
-function restoreAll() {
-  hiddenEntries = [];
-  localStorage.setItem('hiddenJadwal', '[]');
+  saveData();
+  closeForm();
+  renderFilters();
+  renderStats();
   render();
 }
 
-// Search handler
-document.getElementById('searchInput').addEventListener('input', function(e) {
-  searchQuery = e.target.value;
-  render();
-});
+// === DELETE ===
+function openDelete(idx) {
+  deleteIdx = idx;
+  const d = allData[idx];
+  if (!d) return;
+  document.getElementById('deleteInfo').textContent = `${d.mk} — ${d.dosen}, ${d.hari} ${d.jam}`;
+  document.getElementById('deleteModal').classList.add('show');
+}
+function closeDelete() { document.getElementById('deleteModal').classList.remove('show'); deleteIdx=-1; }
+function confirmDelete() {
+  if (deleteIdx >= 0 && deleteIdx < allData.length) {
+    allData.splice(deleteIdx, 1);
+    saveData();
+    showToast('🗑️ Jadwal dihapus');
+    renderFilters();
+    renderStats();
+    render();
+  }
+  closeDelete();
+}
 
-// Init
+// === EXPORT/IMPORT ===
+function exportData() {
+  const blob = new Blob([JSON.stringify(allData, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `jadwal_bingpro_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  showToast('📤 Data di-export');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) throw new Error('Format salah');
+      allData = imported;
+      saveData();
+      renderFilters();
+      renderStats();
+      render();
+      showToast(`📥 ${imported.length} jadwal di-import`);
+    } catch(err) {
+      showToast('❌ File tidak valid: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// === THEME ===
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  document.querySelector('.theme-toggle').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('jadwalTheme', isDark ? 'dark' : 'light');
+}
+
+// === TOAST ===
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// === SEARCH ===
+document.getElementById('searchInput').addEventListener('input', e => { searchQuery = e.target.value; render(); });
+
+// === INIT ===
 async function init() {
-  // Load theme (default = light, toggle to dark)
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
+  if (localStorage.getItem('jadwalTheme') === 'dark') {
     document.body.classList.add('dark');
     document.querySelector('.theme-toggle').textContent = '☀️';
-  } else {
-    document.querySelector('.theme-toggle').textContent = '🌙';
   }
-
-  await loadFromSheet();
+  const hasLocal = loadData();
+  if (!hasLocal) {
+    await loadFromSheet();
+  } else {
+    showToast(`💾 ${allData.length} jadwal dari penyimpanan lokal`);
+  }
   renderFilters();
   renderStats();
   render();
@@ -637,9 +683,8 @@ async function init() {
 
 init();
 
-// Register Service Worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(e => console.log('SW error:', e));
+  navigator.serviceWorker.register('sw.js').catch(e => {});
 }
 </script>
 </body>
