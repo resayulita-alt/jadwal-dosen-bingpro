@@ -389,7 +389,6 @@ function getFilteredData() {
 // Render card view
 function renderCards() {
   const filtered = getFilteredData();
-  displayData = filtered;
   if (filtered.length === 0) {
     document.getElementById('content').innerHTML = `
       <div class="empty">
@@ -425,7 +424,7 @@ function renderCards() {
     html += '<div class="cards">';
     entries.forEach((d, idx) => {
       const entryDate = getWeekDates(d.minggu, d.hari);
-      const di = displayData.indexOf(d);
+      const ek = entryKey(d);
       html += `
         <div class="card">
           <div class="card-header">
@@ -443,7 +442,7 @@ function renderCards() {
             ${d.prodi ? `<span class="card-prodi">${d.prodi}</span>` : ''}
             ${d.minggu ? `<span class="card-prodi" style="background:rgba(16,185,129,0.12);color:#3a9d6d">Minggu ${d.minggu}</span>` : ''}
             <span style="flex:1"></span>
-            <button class="delete-btn" onclick="deleteEntry(${di})" title="Hapus jadwal">🗑️</button>
+            <button class="delete-btn" onclick="deleteEntry('${ek.replace(/'/g, "\\'")}')" title="Hapus jadwal">🗑️</button>
           </div>
         </div>`;
     });
@@ -457,7 +456,6 @@ function renderCards() {
 // Render table view
 function renderTable() {
   const filtered = getFilteredData();
-  displayData = filtered;
   if (filtered.length === 0) {
     document.getElementById('content').innerHTML = `
       <div class="empty">
@@ -479,12 +477,12 @@ function renderTable() {
   html += '<thead><tr><th>Hari</th><th>Tanggal</th><th>Jam</th><th>Mata Kuliah</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th>Minggu</th><th></th></tr></thead><tbody>';
   sorted.forEach((d, idx) => {
     const entryDate = getWeekDates(d.minggu, d.hari) || '-';
-    const di = displayData.indexOf(d);
+    const ek = entryKey(d);
     html += `<tr>
       <td>${d.hari}</td><td>${entryDate}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td>
       <td>${d.dosen}</td><td>${d.prodi || '-'}</td><td>${d.kelas || '-'}</td>
       <td>${d.ruang || '-'}</td><td>${d.minggu || '-'}</td>
-      <td><button class="delete-btn" onclick="deleteEntry(${di})" title="Hapus">🗑️</button></td>
+      <td><button class="delete-btn" onclick="deleteEntry('${ek.replace(/'/g, "\\'")}')" title="Hapus">🗑️</button></td>
     </tr>`;
   });
   html += '</tbody></table></div>';
@@ -575,21 +573,23 @@ async function refreshData() {
 
 // Delete entry (hide from view + open sheet for actual deletion)
 let hiddenEntries = JSON.parse(localStorage.getItem('hiddenJadwal') || '[]');
-let displayData = [];
 
 function entryKey(d) {
   return `${d.dosen}|${d.hari}|${d.jam}|${d.mk}`;
 }
 
-function deleteEntry(idx) {
-  const d = displayData[idx];
-  if (!d) return;
-  const msg = `Hapus jadwal "${d.mk}" (${d.dosen}, ${d.hari} ${d.jam})?\n\nOK = Sembunyikan dari tampilan\nBATAL = Buka Google Sheet (hapus manual)`;
+function deleteEntry(key) {
+  if (!key) return;
+  const parts = key.split('|');
+  const mk = parts[3] || '';
+  const dosen = parts[0] || '';
+  const hari = parts[1] || '';
+  const jam = parts[2] || '';
+  const msg = `Hapus jadwal "${mk}" (${dosen}, ${hari} ${jam})?\n\nOK = Sembunyikan dari tampilan\nBATAL = Buka Google Sheet (hapus manual)`;
   if (!confirm(msg)) {
     window.open('https://docs.google.com/spreadsheets/d/1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw/edit#gid=0', '_blank');
     return;
   }
-  const key = entryKey(d);
   if (!hiddenEntries.includes(key)) {
     hiddenEntries.push(key);
     localStorage.setItem('hiddenJadwal', JSON.stringify(hiddenEntries));
