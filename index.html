@@ -4,471 +4,546 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Jadwal Dosen BINGPRO</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1e3a5f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Jadwal BINGPRO">
+<link rel="apple-touch-icon" href="icon-192.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',sans-serif;background:#0a0f1a;min-height:100vh;color:#e2e8f0}
+
+/* HEADER */
 .header{background:linear-gradient(135deg,#1e3a5f,#2563eb);padding:20px 16px 16px;text-align:center;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
 .header h1{font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:2px}
 .header p{font-size:0.72rem;color:#93c5fd}
 .badge-row{display:flex;justify-content:center;gap:8px;margin-top:8px;flex-wrap:wrap}
 .badge{background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:20px;font-size:0.65rem;color:#dbeafe}
-.nav-tabs{display:flex;background:#111827;border-bottom:1px solid #1e293b;overflow-x:auto;position:sticky;top:88px;z-index:99}
-.nav-tabs::-webkit-scrollbar{display:none}
-.nav-tab{flex:1;padding:12px 8px;text-align:center;font-size:0.72rem;font-weight:600;color:#64748b;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:0.2s}
-.nav-tab.active{color:#60a5fa;border-bottom-color:#60a5fa;background:rgba(96,165,250,0.05)}
-.filters{padding:12px 16px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* SEARCH */
+.search-box{padding:12px 16px;position:sticky;top:88px;z-index:99;background:#0a0f1a}
+.search-input{width:100%;padding:12px 16px 12px 44px;border-radius:12px;border:1px solid #1e293b;background:#1e293b;color:#e2e8f0;font-size:0.9rem;font-family:inherit;outline:none;transition:0.2s}
+.search-input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.15)}
+.search-icon{position:absolute;left:28px;top:50%;transform:translateY(-50%);font-size:1rem;opacity:0.5}
+.search-box{position:relative}
+
+/* FILTERS */
+.filters{padding:0 16px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .filters::-webkit-scrollbar{display:none}
-.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0}
-.filter-btn.active{background:#2563eb;border-color:#2563eb;color:#fff;font-weight:600}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s}
+.filter-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff;font-weight:600}
+.filter-btn:hover{border-color:#3b82f6;color:#e2e8f0}
 
-/* Week selector - improved */
-.week-bar{padding:12px 16px;display:flex;align-items:center;gap:10px}
-.week-btn{width:36px;height:36px;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s}
-.week-btn:active{background:#2563eb}
-.week-chip{flex:1;text-align:center}
-.week-chip .week-num{font-size:1.1rem;font-weight:800;color:#60a5fa}
-.week-chip .week-range{font-size:0.65rem;color:#64748b;margin-top:2px}
-.week-chips{padding:0 16px 8px;display:flex;gap:6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.week-chips::-webkit-scrollbar{display:none}
-.week-chip-btn{padding:6px 14px;border-radius:20px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.72rem;font-family:inherit;cursor:pointer;white-space:nowrap;transition:0.2s;flex-shrink:0}
-.week-chip-btn.active{background:#1d4ed8;border-color:#3b82f6;color:#fff;font-weight:600}
-
-.stats{padding:8px 16px;display:flex;gap:8px}
-.stat-card{flex:1;background:#1e293b;border-radius:10px;padding:10px;text-align:center;border:1px solid #334155}
-.stat-num{font-size:1.3rem;font-weight:700;color:#60a5fa}
+/* STATS */
+.stats{padding:8px 16px;display:flex;gap:8px;flex-wrap:wrap}
+.stat{background:#1e293b;border-radius:10px;padding:8px 12px;flex:1;min-width:100px;text-align:center}
+.stat-num{font-size:1.2rem;font-weight:800;color:#60a5fa}
 .stat-label{font-size:0.6rem;color:#64748b;margin-top:2px}
-.view{padding:0 16px 100px}
-.view.hidden{display:none}
 
-/* Day section - cleaner */
-.day-section{margin-bottom:20px}
-.day-header{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #1e293b;margin-bottom:10px}
-.day-name{font-size:0.85rem;font-weight:700;color:#e2e8f0}
-.day-date{font-size:0.65rem;color:#64748b;margin-left:auto}
-.day-count{background:#2563eb;color:#fff;padding:2px 8px;border-radius:10px;font-size:0.6rem;font-weight:600}
+/* CARDS */
+.cards{padding:8px 16px 24px}
+.card{background:#1e293b;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #334155;transition:0.2s}
+.card:hover{border-color:#3b82f6;transform:translateY(-1px)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.card-mk{font-size:0.95rem;font-weight:700;color:#f1f5f9}
+.card-sks{background:#3b82f6;color:#fff;padding:2px 8px;border-radius:8px;font-size:0.65rem;font-weight:700}
+.card-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.card-tag{background:#0f172a;padding:4px 10px;border-radius:8px;font-size:0.7rem;color:#94a3b8;display:flex;align-items:center;gap:4px}
+.card-tag .icon{font-size:0.8rem}
+.card-dosen{font-size:0.78rem;font-weight:600;color:#60a5fa;margin-top:6px}
+.card-prodi{display:inline-block;background:rgba(59,130,246,0.15);color:#93c5fd;padding:2px 8px;border-radius:6px;font-size:0.65rem;margin-top:4px}
 
-/* Schedule card - cleaner layout */
-.sched-card{background:#1e293b;border-radius:12px;padding:12px 14px;margin-bottom:8px;border-left:3px solid #334155;display:flex;gap:12px;align-items:flex-start}
-.sched-left{display:flex;flex-direction:column;align-items:center;min-width:54px}
-.sched-time{font-size:0.72rem;font-weight:700;color:#fbbf24;text-align:center;line-height:1.3}
-.sched-time-divider{font-size:0.5rem;color:#64748b;margin:1px 0}
-.sched-right{flex:1;min-width:0}
-.sched-mk-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.sched-mk{font-size:0.85rem;font-weight:700;color:#e2e8f0}
-.sched-prodi{font-size:0.6rem;padding:2px 8px;border-radius:8px;font-weight:600;white-space:nowrap}
-.sched-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.sched-tag{font-size:0.6rem;padding:2px 6px;border-radius:6px;background:#0f172a;color:#94a3b8}
-.sched-dosen{font-size:0.65rem;color:#60a5fa;margin-top:4px;display:flex;align-items:center;gap:4px}
-.sched-dosen-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+/* DAY SECTION */
+.day-section{padding:16px 16px 0}
+.day-title{font-size:0.85rem;font-weight:700;color:#60a5fa;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.day-title::after{content:'';flex:1;height:1px;background:#1e293b}
 
-/* Prodi colors */
-.prodi-TPTP{background:rgba(59,130,246,0.15);color:#60a5fa}
-.prodi-BIKBP{background:rgba(16,185,129,0.15);color:#34d399}
-.prodi-AGRIBISNIS{background:rgba(251,191,36,0.15);color:#fbbf24}
-.prodi-HORTI{background:rgba(168,85,247,0.15);color:#a78bfa}
-.prodi-TRK{background:rgba(239,68,68,0.15);color:#f87171}
-.prodi-BINGPRO{background:rgba(236,72,153,0.15);color:#f472b6}
-.prodi-REKAYASA-PANGAN{background:rgba(245,158,11,0.15);color:#f59e0b}
-.prodi-TERNAK{background:rgba(16,185,129,0.15);color:#10b981}
-.prodi-BENIH{background:rgba(52,211,153,0.15);color:#34d399}
-.prodi-PERKEBUNAN{background:rgba(217,119,6,0.15);color:#d97706}
-.prodi-MANAJEMEN-AGRI{background:rgba(139,92,246,0.15);color:#8b5cf6}
-.prodi-PANGAN-D3{background:rgba(234,179,8,0.15);color:#eab308}
-.prodi-MEKANISASI{background:rgba(107,114,128,0.15);color:#9ca3af}
-.prodi-TATA-AIR{background:rgba(56,189,248,0.15);color:#38bdf8}
-.prodi-VETERINER{background:rgba(244,114,182,0.15);color:#f472b6}
-.prodi-KETAHANAN-PANGAN{background:rgba(251,146,60,0.15);color:#fb923c}
+/* EMPTY STATE */
+.empty{text-align:center;padding:40px 16px;color:#475569}
+.empty-icon{font-size:2.5rem;margin-bottom:8px}
+.empty-text{font-size:0.85rem}
 
-/* Dosen view */
-.dosen-card{background:#1e293b;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #334155}
-.dosen-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.dosen-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#fff}
-.dosen-name{font-size:0.9rem;font-weight:700;color:#e2e8f0}
-.dosen-role{font-size:0.65rem;color:#94a3b8}
-.dosen-sched-row{display:flex;align-items:center;gap:8px;padding:8px;background:#0f172a;border-radius:8px;margin-top:6px}
-.dosen-sched-day{font-size:0.72rem;font-weight:700;color:#60a5fa;min-width:40px}
-.dosen-sched-info{font-size:0.72rem;color:#e2e8f0}
+/* LOADING */
+.loading{text-align:center;padding:40px;color:#64748b}
+.loading-spinner{display:inline-block;width:24px;height:24px;border:3px solid #1e293b;border-top-color:#3b82f6;border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* Summary */
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px}
-.summary-item{background:#1e293b;border-radius:12px;padding:14px;border:1px solid #334155}
-.summary-title{font-size:0.65rem;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
-.summary-value{font-size:1.4rem;font-weight:800;color:#60a5fa}
-.summary-full{grid-column:1/-1}
-.progress-bar{height:6px;background:#334155;border-radius:3px;margin-top:8px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px}
+/* SHARE BUTTON */
+.share-fab{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:#25d366;border:none;color:#fff;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 15px rgba(37,211,102,0.4);z-index:100;display:flex;align-items:center;justify-content:center;transition:0.2s}
+.share-fab:hover{transform:scale(1.1)}
 
-.empty{text-align:center;padding:60px 20px}
-.empty-icon{font-size:3rem;margin-bottom:12px}
-.empty-text{font-size:0.85rem;color:#64748b}
-.fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border:none;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(37,99,235,0.4);z-index:50;display:flex;align-items:center;justify-content:center}
-.share-btn{position:fixed;bottom:20px;left:20px;padding:10px 18px;border-radius:28px;background:#25d366;color:#fff;border:none;font-size:0.8rem;font-weight:600;cursor:pointer;box-shadow:0 4px 15px rgba(37,211,102,0.3);z-index:50;font-family:inherit;display:flex;align-items:center;gap:6px}
-.legend{padding:8px 16px;display:flex;flex-wrap:wrap;gap:6px}
-.legend-item{display:flex;align-items:center;gap:4px;font-size:0.6rem;color:#94a3b8}
-.legend-dot{width:8px;height:8px;border-radius:50%}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:flex-end;justify-content:center}
+/* DARK MODE TOGGLE */
+.theme-toggle{position:fixed;bottom:20px;left:20px;width:40px;height:40px;border-radius:50%;background:#1e293b;border:1px solid #334155;color:#e2e8f0;font-size:1rem;cursor:pointer;z-index:100;display:flex;align-items:center;justify-content:center}
+
+/* LIGHT MODE */
+body.light{background:#f8fafc;color:#1e293b}
+body.light .header{background:linear-gradient(135deg,#2563eb,#3b82f6)}
+body.light .search-input{background:#fff;border-color:#e2e8f0;color:#1e293b}
+body.light .card{background:#fff;border-color:#e2e8f0;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+body.light .card-mk{color:#1e293b}
+body.light .card-tag{background:#f1f5f9;color:#475569}
+body.light .stat{background:#fff;border:1px solid #e2e8f0}
+body.light .stat-label{color:#64748b}
+body.light .day-title{color:#2563eb}
+body.light .search-box{background:#f8fafc}
+body.light .theme-toggle{background:#fff;border-color:#e2e8f0}
+body.light .filter-btn{border-color:#e2e8f0;color:#64748b}
+body.light .filter-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+
+/* REFRESH BUTTON */
+.refresh-btn{background:rgba(255,255,255,0.15);border:none;color:#93c5fd;padding:4px 10px;border-radius:12px;font-size:0.65rem;cursor:pointer;margin-left:8px}
+.refresh-btn:hover{background:rgba(255,255,255,0.25)}
+
+/* VIEW TOGGLE */
+.view-toggle{display:flex;gap:4px;padding:0 16px 8px}
+.view-btn{padding:6px 12px;border-radius:8px;border:1px solid #334155;background:transparent;color:#94a3b8;font-size:0.7rem;cursor:pointer;font-family:inherit}
+.view-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+
+/* TABLE VIEW */
+.table-view{padding:0 16px 24px;overflow-x:auto}
+.table-view table{width:100%;border-collapse:collapse;font-size:0.75rem}
+.table-view th{background:#1e3a5f;color:#fff;padding:8px 6px;text-align:left;font-weight:600;position:sticky;top:0}
+.table-view td{padding:6px;border-bottom:1px solid #1e293b;color:#e2e8f0}
+.table-view tr:hover td{background:rgba(59,130,246,0.1)}
+body.light .table-view th{background:#2563eb}
+body.light .table-view td{border-color:#e2e8f0;color:#1e293b}
+body.light .table-view tr:hover td{background:rgba(59,130,246,0.05)}
+
+/* DETAIL MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center;padding:16px}
 .modal-overlay.show{display:flex}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-thumb{background:#334155;border-radius:4px}
+.modal{background:#1e293b;border-radius:16px;padding:20px;max-width:400px;width:100%;max-height:80vh;overflow-y:auto;border:1px solid #334155}
+body.light .modal{background:#fff;border-color:#e2e8f0}
+.modal h3{font-size:1rem;color:#f1f5f9;margin-bottom:12px}
+body.light .modal h3{color:#1e293b}
+.modal-field{margin-bottom:8px}
+.modal-label{font-size:0.65rem;color:#64748b;text-transform:uppercase;letter-spacing:0.5px}
+.modal-value{font-size:0.85rem;color:#e2e8f0;margin-top:2px}
+body.light .modal-value{color:#1e293b}
+.modal-close{width:100%;padding:10px;border-radius:10px;background:#3b82f6;color:#fff;border:none;font-weight:600;cursor:pointer;margin-top:12px;font-family:inherit}
 </style>
 </head>
 <body>
+
 <div class="header">
-<h1>Jadwal Dosen BINGPRO</h1>
-<p>Prodi Bahasa Inggris Profesional - Politeknik Pertanian Negeri Payakumbuh</p>
-<div class="badge-row">
-<span class="badge">5 Dosen</span>
-<span class="badge">16 Prodi</span>
-<span class="badge" id="sheetStatus">Memuat data...</span>
+  <h1>📅 Jadwal Dosen BINGPRO</h1>
+  <p>Politeknik Pertanian Negeri Payakumbuh</p>
+  <div class="badge-row">
+    <span class="badge" id="dataCount">Memuat...</span>
+    <span class="badge" id="sheetStatus">📊 Menghubungkan...</span>
+    <button class="refresh-btn" onclick="refreshData()">🔄 Refresh</button>
+  </div>
 </div>
+
+<div class="search-box">
+  <span class="search-icon">🔍</span>
+  <input type="text" class="search-input" id="searchInput" placeholder="Cari dosen, mata kuliah, ruang...">
 </div>
-<div class="nav-tabs">
-<div class="nav-tab active" data-view="weekly" onclick="switchView('weekly')">Mingguan</div>
-<div class="nav-tab" data-view="dosen" onclick="switchView('dosen')">Per Dosen</div>
-<div class="nav-tab" data-view="summary" onclick="switchView('summary')">Ringkasan</div>
+
+<div class="filters" id="filterRow"></div>
+
+<div class="view-toggle">
+  <button class="view-btn active" onclick="setView('card')">📋 Kartu</button>
+  <button class="view-btn" onclick="setView('table')">📊 Tabel</button>
 </div>
-<div id="filterArea" class="filters">
-<button class="filter-btn active" data-filter="all">Semua</button>
-<button class="filter-btn" data-filter="TPTP">TPTP</button>
-<button class="filter-btn" data-filter="BIKBP">BIKBP</button>
-<button class="filter-btn" data-filter="Agribisnis">Agribisnis</button>
-<button class="filter-btn" data-filter="Hortikultura">Hortikultura</button>
-<button class="filter-btn" data-filter="TRK">TRK</button>
-<button class="filter-btn" data-filter="BINGPRO">BINGPRO</button>
-<button class="filter-btn" data-filter="Rekayasa Pangan">Rek. Pangan</button>
-<button class="filter-btn" data-filter="Ternak">Ternak</button>
-<button class="filter-btn" data-filter="Benih">Benih</button>
-<button class="filter-btn" data-filter="Perkebunan">Perkebunan</button>
-<button class="filter-btn" data-filter="Manajemen Agri">Man. Agri</button>
-<button class="filter-btn" data-filter="Pangan D3">Pangan D3</button>
-<button class="filter-btn" data-filter="Mekanisasi">Mekanisasi</button>
-<button class="filter-btn" data-filter="Tata Air">Tata Air</button>
-<button class="filter-btn" data-filter="Veteriner">Veteriner</button>
-<button class="filter-btn" data-filter="Ketahanan Pangan">Ket. Pangan</button>
+
+<div class="stats" id="statsRow"></div>
+
+<div id="content">
+  <div class="loading"><div class="loading-spinner"></div><p style="margin-top:12px;font-size:0.8rem">Memuat jadwal dari Google Sheets...</p></div>
 </div>
-<div class="week-chips" id="weekChips"></div>
-<div class="stats">
-<div class="stat-card"><div class="stat-num" id="statTotal">0</div><div class="stat-label">Total Jadwal</div></div>
-<div class="stat-card"><div class="stat-num" id="statDosen">0</div><div class="stat-label">Dosen</div></div>
-<div class="stat-card"><div class="stat-num" id="statProdi">0</div><div class="stat-label">Prodi</div></div>
+
+<button class="share-fab" onclick="shareWA()" title="Bagikan ke WhatsApp">📱</button>
+<button class="theme-toggle" onclick="toggleTheme()" title="Ganti tema">🌙</button>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent"></div>
 </div>
-<div class="view" id="viewWeekly"></div>
-<div class="view hidden" id="viewDosen"></div>
-<div class="view hidden" id="viewSummary"></div>
-<button class="share-btn" onclick="shareWA()">Share</button>
-<button class="fab" onclick="document.getElementById('formModal').classList.add('show')">+</button>
-<div class="modal-overlay" id="formModal">
-<div style="background:#1e293b;border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:90vh;overflow:hidden">
-<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #334155">
-<div style="font-size:1rem;font-weight:700;color:#60a5fa">Input Jadwal Mengajar</div>
-<button onclick="document.getElementById('formModal').classList.remove('show')" style="background:none;border:none;color:#94a3b8;font-size:1.4rem;cursor:pointer">X</button>
-</div>
-<div style="height:calc(90vh - 60px);overflow:hidden">
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdEArnVfCfJ6Euqc3eIWMUrjPlv6VK4HFOIA-9kXkKiBYgBHg/viewform?embedded=true" style="width:100%;height:100%;border:none"></iframe>
-</div>
-</div>
-</div>
+
 <script>
-var SHEET_ID = '1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw';
-var SHEET_URL_FORM = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:csv&sheet=Form+Responses+1';
+const SHEET_ID = '1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw';
+const SHEET_NAME = 'Form Responses 1';
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
-var schedules = [
-  {day:'Rabu',time:'13:30-15:10',mk:'Semhas Jafri',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
-  {day:'Rabu',time:'10:50-12:30',mk:'Semhas Najwa',sks:2,prodi:'TPTP',kelas:'B',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
-  {day:'Rabu',time:'15:15-16:45',mk:'Semhas NINDA',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
-  {day:'Kamis',time:'09:05-10:55',mk:'Semhas SEPTIAN',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
-  {day:'Kamis',time:'13:30-15:10',mk:'Semhas Rani',sks:2,prodi:'TPTP',kelas:'A',dosen:'Resa Yulita',ruang:'R.14',minggu:'16'},
-  {day:'Jumat',time:'13:30-15:10',mk:'Rapat Kurikulum',sks:2,prodi:'BIKBP',kelas:'-',dosen:'Resa Yulita',ruang:'Ruang Prodi BINGPRO',minggu:'16'}
-];
+let allData = [];
+let currentFilter = 'all';
+let currentView = 'card';
+let searchQuery = '';
 
-var currentFilter = 'all';
-var currentView = 'weekly';
-var currentWeek = 'all';
-var DOSEN_COLORS = {'Resa Yulita':'#3b82f6','Meriyan Elza':'#10b981','Yuliandri':'#f59e0b','Hudia':'#8b5cf6','Widya Febrina':'#ef4444'};
-var DOSEN_INITIALS = {'Resa Yulita':'RY','Meriyan Elza':'ME','Yuliandri':'YL','Hudia':'HD','Widya Febrina':'WF'};
-var DOSEN_ROLES = {'Resa Yulita':'PIC BINGPRO','Meriyan Elza':'Dokumentasi','Yuliandri':'Dosen','Hudia':'Bendahara','Widya Febrina':'PJ TRK'};
+const DAY_ORDER = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
 
-var PRODI_CLASS_MAP = {
-  'TPTP':'TPTP','BIKBP':'BIKBP','Agribisnis':'AGRIBISNIS','Hortikultura':'HORTI',
-  'TRK':'TRK','BINGPRO':'BINGPRO',
-  'Rekayasa Pangan':'REKAYASA-PANGAN','Ternak':'TERNAK','Benih':'BENIH',
-  'Perkebunan':'PERKEBUNAN','Manajemen Agri':'MANAJEMEN-AGRI',
-  'Pangan D3':'PANGAN-D3','Mekanisasi':'MEKANISASI','Tata Air':'TATA-AIR',
-  'Veteriner':'VETERINER','Ketahanan Pangan':'KETAHANAN-PANGAN'
-};
-
-var PRODI_COLORS = {
-  'TPTP':'#3b82f6','BIKBP':'#10b981','Agribisnis':'#f59e0b','Hortikultura':'#a78bfa',
-  'TRK':'#ef4444','BINGPRO':'#f472b6',
-  'Rekayasa Pangan':'#f59e0b','Ternak':'#10b981','Benih':'#34d399',
-  'Perkebunan':'#d97706','Manajemen Agri':'#8b5cf6',
-  'Pangan D3':'#eab308','Mekanisasi':'#9ca3af','Tata Air':'#38bdf8',
-  'Veteriner':'#f472b6','Ketahanan Pangan':'#fb923c'
-};
-
-var DAYS = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-
-function getProdiClass(prodi){
-  var key = PRODI_CLASS_MAP[prodi];
-  return key ? 'prodi-'+key : 'prodi-TPTP';
-}
-
-// Get all unique week numbers from data
-function getWeeks(){
-  var weeks = {};
-  for(var i=0;i<schedules.length;i++){
-    var w = schedules[i].minggu || '?';
-    if(!weeks[w]) weeks[w] = 0;
-    weeks[w]++;
+// Parse CSV row handling quoted fields
+function parseCSVRow(row) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < row.length; i++) {
+    const ch = row[i];
+    if (ch === '"') { inQuotes = !inQuotes; }
+    else if (ch === ',' && !inQuotes) { result.push(current.trim()); current = ''; }
+    else { current += ch; }
   }
-  return Object.keys(weeks).sort(function(a,b){return parseInt(a)-parseInt(b);});
+  result.push(current.trim());
+  return result;
 }
 
-// Build week chip buttons
-function buildWeekChips(){
-  var weeks = getWeeks();
-  var c = document.getElementById('weekChips');
-  if(weeks.length <= 1){c.style.display='none';return;}
-  c.style.display='flex';
-  var html = '<button class="week-chip-btn'+(currentWeek==='all'?' active':'')+'" onclick="setWeek(\'all\')">Semua</button>';
-  for(var i=0;i<weeks.length;i++){
-    html += '<button class="week-chip-btn'+(currentWeek===weeks[i]?' active':'')+'" onclick="setWeek(\''+weeks[i]+'\')">Minggu '+weeks[i]+'</button>';
+// Parse the merged header row (first batch of form responses)
+function parseMergedHeaderRow(headerLabel) {
+  // The header contains: "FieldName val1 val2 val3..."
+  // Split by spaces but be smart about it
+  const parts = headerLabel.split(/\s+/);
+  // The first part is the field name, rest are values
+  return parts.slice(1);
+}
+
+// Load data from Google Sheets
+async function loadFromSheet() {
+  try {
+    const resp = await fetch(SHEET_URL);
+    if (!resp.ok) throw new Error('Fetch failed: ' + resp.status);
+    const csv = await resp.text();
+    const rows = csv.split('\n').filter(r => r.trim());
+    if (rows.length < 1) throw new Error('No data');
+
+    const headers = parseCSVRow(rows[0]);
+    // headers[0] = "Timestamp val1 val2..."
+    // headers[1] = "Nama Dosen val1 val2..."
+    // etc.
+
+    // Parse the merged first batch from headers
+    const timestamps = parseMergedHeaderRow(headers[0]);
+    const dosenNames = parseMergedHeaderRow(headers[1]);
+    const hariList = parseMergedHeaderRow(headers[2]);
+    const jamList = parseMergedHeaderRow(headers[3]);
+    const mkList = parseMergedHeaderRow(headers[4]);
+    const sksList = parseMergedHeaderRow(headers[5]);
+    const prodiList = parseMergedHeaderRow(headers[6]);
+    const kelasList = parseMergedHeaderRow(headers[7]);
+    const ruangList = parseMergedHeaderRow(headers[8]);
+    const mingguList = parseMergedHeaderRow(headers[9]);
+
+    const firstBatchCount = Math.min(
+      dosenNames.length, hariList.length, jamList.length,
+      mkList.length, sksList.length, prodiList.length,
+      kelasList.length, ruangList.length, mingguList.length
+    );
+
+    const data = [];
+
+    // First batch from headers
+    for (let i = 0; i < firstBatchCount; i++) {
+      const mk = mkList[i] || '';
+      if (!mk || mk.toLowerCase() === 'mata kuliah') continue;
+      data.push({
+        dosen: dosenNames[i] || '',
+        hari: hariList[i] || '',
+        jam: jamList[i] || '',
+        mk: mk,
+        sks: sksList[i] || '',
+        prodi: prodiList[i] || '',
+        kelas: kelasList[i] || '',
+        ruang: ruangList[i] || '',
+        minggu: mingguList[i] || ''
+      });
+    }
+
+    // Subsequent rows (individual entries)
+    for (let i = 1; i < rows.length; i++) {
+      const cols = parseCSVRow(rows[i]);
+      if (cols.length < 5 || !cols[1]) continue;
+      // Skip if MK is empty
+      const mk = cols[4] || '';
+      if (!mk || mk.toLowerCase() === 'mata kuliah') continue;
+      data.push({
+        dosen: cols[1] || '',
+        hari: cols[2] || '',
+        jam: cols[3] || '',
+        mk: mk,
+        sks: cols[5] || '',
+        prodi: cols[6] || cols[10] || '',  // col 10 is Column 11 (prodi for some)
+        kelas: cols[7] || '',
+        ruang: cols[8] || '',
+        minggu: cols[9] || ''
+      });
+    }
+
+    if (data.length > 0) {
+      allData = data;
+      document.getElementById('sheetStatus').textContent = '📊 Live dari Google Sheets';
+      console.log('Loaded ' + data.length + ' entries from Google Sheets');
+      return true;
+    }
+  } catch(e) {
+    console.log('Google Sheet error: ' + e.message);
+    document.getElementById('sheetStatus').textContent = '⚠️ Gagal memuat';
   }
-  c.innerHTML = html;
+  return false;
 }
 
-function setWeek(w){
-  currentWeek = w;
-  buildWeekChips();
-  renderAll();
+// Render filters
+function renderFilters() {
+  const pros = [...new Set(allData.map(d => d.prodi).filter(Boolean))].sort();
+  const dosens = [...new Set(allData.map(d => d.dosen).filter(Boolean))].sort();
+
+  let html = '<button class="filter-btn active" onclick="setFilter(\'all\',this)">Semua</button>';
+
+  // Prodi filters
+  pros.forEach(p => {
+    html += `<button class="filter-btn" onclick="setFilter('prodi:${p}',this)">📚 ${p}</button>`;
+  });
+
+  // Dosen filters
+  dosens.forEach(d => {
+    const short = d.split(' ').slice(0, 2).join(' ');
+    html += `<button class="filter-btn" onclick="setFilter('dosen:${d}',this)">👩‍🏫 ${short}</button>`;
+  });
+
+  document.getElementById('filterRow').innerHTML = html;
 }
 
-function getFiltered(){
-  var list = schedules;
-  if(currentFilter!=='all') list = list.filter(function(s){return s.prodi===currentFilter;});
-  if(currentWeek!=='all') list = list.filter(function(s){return (s.minggu||'')===currentWeek;});
-  return list;
+// Render stats
+function renderStats() {
+  const dosenCount = new Set(allData.map(d => d.dosen)).size;
+  const mkCount = new Set(allData.map(d => d.mk)).size;
+  const prodiCount = new Set(allData.map(d => d.prodi)).size;
+  const totalSKS = allData.reduce((sum, d) => sum + (parseInt(d.sks) || 0), 0);
+
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat"><div class="stat-num">${dosenCount}</div><div class="stat-label">Dosen</div></div>
+    <div class="stat"><div class="stat-num">${mkCount}</div><div class="stat-label">Mata Kuliah</div></div>
+    <div class="stat"><div class="stat-num">${prodiCount}</div><div class="stat-label">Prodi</div></div>
+    <div class="stat"><div class="stat-num">${totalSKS}</div><div class="stat-label">Total SKS</div></div>
+  `;
 }
 
-function switchView(view){
-  currentView=view;
-  var tabs=document.querySelectorAll('.nav-tab');
-  for(var i=0;i<tabs.length;i++) tabs[i].classList.remove('active');
-  document.querySelector('[data-view="'+view+'"]').classList.add('active');
-  var views=document.querySelectorAll('.view');
-  for(var i=0;i<views.length;i++) views[i].classList.add('hidden');
-  document.getElementById('view'+view.charAt(0).toUpperCase()+view.slice(1)).classList.remove('hidden');
-  document.getElementById('filterArea').style.display=view==='weekly'?'flex':'none';
-  document.getElementById('weekChips').style.display=view==='weekly'?'flex':'none';
-  renderAll();
+// Filter data
+function getFilteredData() {
+  let filtered = allData;
+
+  // Apply filter
+  if (currentFilter.startsWith('prodi:')) {
+    const p = currentFilter.split(':')[1];
+    filtered = filtered.filter(d => d.prodi === p);
+  } else if (currentFilter.startsWith('dosen:')) {
+    const dn = currentFilter.split(':').slice(1).join(':');
+    filtered = filtered.filter(d => d.dosen === dn);
+  }
+
+  // Apply search
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    filtered = filtered.filter(d =>
+      (d.dosen || '').toLowerCase().includes(q) ||
+      (d.mk || '').toLowerCase().includes(q) ||
+      (d.ruang || '').toLowerCase().includes(q) ||
+      (d.prodi || '').toLowerCase().includes(q) ||
+      (d.kelas || '').toLowerCase().includes(q) ||
+      (d.hari || '').toLowerCase().includes(q)
+    );
+  }
+
+  return filtered;
 }
 
-// Parse time range into start and end
-function parseTime(t){
-  var parts = t.split('-');
-  return {start: parts[0]||t, end: parts[1]||''};
-}
-
-function renderWeekly(){
-  var c=document.getElementById('viewWeekly');
-  var f=getFiltered();
-
-  if(f.length===0){
-    c.innerHTML='<div class="empty"><div class="empty-icon">📅</div><div class="empty-text">Belum ada jadwal'+(currentWeek!=='all'?' minggu '+currentWeek:'')+'.<br>Klik tombol + untuk input.</div></div>';
+// Render card view
+function renderCards() {
+  const filtered = getFilteredData();
+  if (filtered.length === 0) {
+    document.getElementById('content').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">Tidak ada jadwal ditemukan</div>
+      </div>`;
     return;
   }
 
-  // Group by week, then by day
-  var weekGroups = {};
-  for(var i=0;i<f.length;i++){
-    var w = f[i].minggu||'?';
-    if(!weekGroups[w]) weekGroups[w] = {};
-    var d = f[i].day;
-    if(!weekGroups[w][d]) weekGroups[w][d] = [];
-    weekGroups[w][d].push(f[i]);
-  }
-
-  var html = '';
-  var weekKeys = Object.keys(weekGroups).sort(function(a,b){return parseInt(a)-parseInt(b);});
-
-  for(var wi=0;wi<weekKeys.length;wi++){
-    var wk = weekKeys[wi];
-    var dayGroups = weekGroups[wk];
-
-    // Week header (only show if multiple weeks or viewing all)
-    if(currentWeek==='all' && weekKeys.length>1){
-      html += '<div style="margin:16px 0 8px;display:flex;align-items:center;gap:8px">';
-      html += '<div style="font-size:0.8rem;font-weight:700;color:#60a5fa">📅 Minggu '+wk+'</div>';
-      html += '<div style="flex:1;height:1px;background:#1e293b"></div>';
-      var weekCount = 0;
-      for(var dk in dayGroups) weekCount += dayGroups[dk].length;
-      html += '<div style="font-size:0.6rem;color:#64748b">'+weekCount+' jadwal</div>';
-      html += '</div>';
-    }
-
-    // Days within this week
-    for(var di=0;di<DAYS.length;di++){
-      var day = DAYS[di];
-      var ds = dayGroups[day];
-      if(!ds || ds.length===0) continue;
-
-      ds.sort(function(a,b){return a.time.localeCompare(b.time);});
-
-      html += '<div class="day-section">';
-      html += '<div class="day-header">';
-      html += '<span class="day-name">'+day+'</span>';
-      html += '<span class="day-count">'+ds.length+' jadwal</span>';
-      html += '</div>';
-
-      for(var i=0;i<ds.length;i++){
-        var s = ds[i];
-        var pc = getProdiClass(s.prodi);
-        var dc = DOSEN_COLORS[s.dosen]||'#334155';
-        var tp = parseTime(s.time);
-
-        html += '<div class="sched-card" style="border-left-color:'+dc+'">';
-
-        // Left: time
-        html += '<div class="sched-left">';
-        html += '<div class="sched-time">'+tp.start+'</div>';
-        if(tp.end) html += '<div class="sched-time-divider">│</div><div class="sched-time">'+tp.end+'</div>';
-        html += '</div>';
-
-        // Right: content
-        html += '<div class="sched-right">';
-        html += '<div class="sched-mk-row">';
-        html += '<span class="sched-mk">'+s.mk+'</span>';
-        if(s.prodi) html += '<span class="sched-prodi '+pc+'">'+s.prodi+'</span>';
-        html += '</div>';
-
-        html += '<div class="sched-meta">';
-        if(s.kelas && s.kelas!=='-') html += '<span class="sched-tag">Kelas '+s.kelas+'</span>';
-        if(s.sks) html += '<span class="sched-tag">'+s.sks+' SKS</span>';
-        if(s.ruang) html += '<span class="sched-tag">📍 '+s.ruang+'</span>';
-        html += '</div>';
-
-        html += '<div class="sched-dosen"><div class="sched-dosen-dot" style="background:'+dc+'"></div>'+s.dosen+'</div>';
-        html += '</div>';
-
-        html += '</div>';
-      }
-      html += '</div>';
-    }
-  }
-
-  c.innerHTML = html;
-}
-
-function renderDosen(){
-  var c=document.getElementById('viewDosen'), f=getFiltered(), names=[], html='';
-  for(var i=0;i<f.length;i++) if(names.indexOf(f[i].dosen)===-1) names.push(f[i].dosen);
-  for(var ni=0;ni<names.length;ni++){
-    var dn=names[ni], ds=[], color=DOSEN_COLORS[dn]||'#3b82f6', init=DOSEN_INITIALS[dn]||dn.charAt(0), role=DOSEN_ROLES[dn]||'';
-    for(var i=0;i<f.length;i++) if(f[i].dosen===dn) ds.push(f[i]);
-    html+='<div class="dosen-card"><div class="dosen-header"><div class="dosen-avatar" style="background:'+color+'">'+init+'</div><div><div class="dosen-name">'+dn+'</div><div class="dosen-role">'+role+' - '+ds.length+' jadwal</div></div></div>';
-    for(var i=0;i<ds.length;i++){
-      var s=ds[i];
-      html+='<div class="dosen-sched-row"><div class="dosen-sched-day">'+s.day.substring(0,3)+'</div><div class="dosen-sched-info">'+s.time+' - '+s.mk+' ('+s.prodi+')</div></div>';
-    }
-    html+='</div>';
-  }
-  if(!html) html='<div class="empty"><div class="empty-text">Belum ada data dosen.</div></div>';
-  c.innerHTML=html;
-}
-
-function renderSummary(){
-  var c=document.getElementById('viewSummary'), f=getFiltered(), total=f.length, tSKS=0;
-  var dSet={}, pSet={};
-  for(var i=0;i<f.length;i++){var s=f[i];dSet[s.dosen]=(dSet[s.dosen]||0)+1;pSet[s.prodi]=(pSet[s.prodi]||0)+1;tSKS+=s.sks||0;}
-  var html='<div class="summary-grid">';
-  html+='<div class="summary-item"><div class="summary-title">Total Jadwal</div><div class="summary-value">'+total+'</div></div>';
-  html+='<div class="summary-item"><div class="summary-title">Total SKS</div><div class="summary-value">'+tSKS+'</div></div>';
-  html+='<div class="summary-item summary-full"><div class="summary-title">Beban Per Dosen</div>';
-  var maxD=1;for(var k in dSet) if(dSet[k]>maxD) maxD=dSet[k];
-  for(var k in dSet){var pct=Math.round(dSet[k]/maxD*100),cl=DOSEN_COLORS[k]||'#3b82f6';html+='<div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:0.72rem"><span>'+k+'</span><span>'+dSet[k]+' jadwal</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+cl+'"></div></div></div>';}
-  html+='</div><div class="summary-item summary-full"><div class="summary-title">Jadwal Per Prodi</div>';
-  var maxP=1;for(var k in pSet) if(pSet[k]>maxP) maxP=pSet[k];
-  for(var k in pSet){var pct=Math.round(pSet[k]/maxP*100);html+='<div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:0.72rem"><span>'+k+'</span><span>'+pSet[k]+' jadwal</span></div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+(PRODI_COLORS[k]||'#60a5fa')+'"></div></div></div>';}
-  html+='</div></div>';
-  c.innerHTML=html;
-}
-
-function renderAll(){
-  buildWeekChips();
-  if(currentView==='weekly') renderWeekly();
-  else if(currentView==='dosen') renderDosen();
-  else if(currentView==='summary') renderSummary();
-  var f=getFiltered();
-  document.getElementById('statTotal').textContent=f.length;
-  var ds={},ps={};
-  for(var i=0;i<f.length;i++){ds[f[i].dosen]=1;ps[f[i].prodi]=1;}
-  document.getElementById('statDosen').textContent=Object.keys(ds).length;
-  document.getElementById('statProdi').textContent=Object.keys(ps).length;
-}
-
-var fBtns=document.querySelectorAll('.filter-btn');
-for(var i=0;i<fBtns.length;i++){
-  fBtns[i].addEventListener('click',function(){
-    for(var j=0;j<fBtns.length;j++) fBtns[j].classList.remove('active');
-    this.classList.add('active');
-    currentFilter=this.dataset.filter;
-    renderAll();
+  // Group by day
+  const byDay = {};
+  filtered.forEach(d => {
+    const day = d.hari || 'Tidak Diketahui';
+    if (!byDay[day]) byDay[day] = [];
+    byDay[day].push(d);
   });
-}
 
-function shareWA(){
-  var t=encodeURIComponent('Jadwal Dosen BINGPRO\n'+window.location.href);
-  window.open('https://wa.me/?text='+t,'_blank');
-}
-
-function loadFromSheet(){
-  fetch(SHEET_URL_FORM).then(function(r){return r.text();}).then(function(csv){
-    var rows=csv.split('\n').filter(function(r){return r.trim();});
-    if(rows.length<2) return;
-    var newData=[];
-    for(var i=1;i<rows.length;i++){
-      var raw=rows[i];
-      var cols=[];
-      var cur='',inQ=false;
-      for(var j=0;j<raw.length;j++){
-        var ch=raw[j];
-        if(ch==='\"') inQ=!inQ;
-        else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}
-        else cur+=ch;
-      }
-      cols.push(cur.trim());
-      if(cols.length<5) continue;
-      var time=(cols[3]||'').trim().replace(/\./g,':');
-      var hari=(cols[2]||'').trim();
-      var mk=(cols[4]||'').trim();
-      if(!hari||!mk) continue;
-      newData.push({
-        day:hari,
-        time:time,
-        mk:mk,
-        sks:parseInt(cols[5])||0,
-        prodi:(cols[6]||'').trim(),
-        kelas:(cols[7]||'-').trim(),
-        dosen:(cols[1]||'').trim(),
-        ruang:(cols[8]||'').trim(),
-        minggu:(cols[9]||'').trim()
-      });
-    }
-    if(newData.length>0){
-      schedules=newData;
-      document.getElementById('sheetStatus').textContent='Data dari Google Sheet (live)';
-      renderAll();
-    }
-  }).catch(function(e){
-    console.log('Sheet error: '+e.message);
-    document.getElementById('sheetStatus').textContent='Data lokal';
+  // Sort by day order
+  const sortedDays = Object.keys(byDay).sort((a, b) => {
+    const ia = DAY_ORDER.indexOf(a);
+    const ib = DAY_ORDER.indexOf(b);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
   });
+
+  let html = '';
+  sortedDays.forEach(day => {
+    const entries = byDay[day].sort((a, b) => (a.jam || '').localeCompare(b.jam || ''));
+    html += `<div class="day-section"><div class="day-title">${getDayEmoji(day)} ${day}</div></div>`;
+    html += '<div class="cards">';
+    entries.forEach((d, idx) => {
+      html += `
+        <div class="card" onclick='showDetail(${JSON.stringify(d).replace(/'/g,"&#39;")})'>
+          <div class="card-header">
+            <span class="card-mk">${d.mk}</span>
+            <span class="card-sks">${d.sks} SKS</span>
+          </div>
+          <div class="card-dosen">👩‍🏫 ${d.dosen}</div>
+          <div class="card-row">
+            <span class="card-tag"><span class="icon">🕐</span> ${d.jam}</span>
+            <span class="card-tag"><span class="icon">🏫</span> ${d.ruang || '-'}</span>
+            ${d.kelas ? `<span class="card-tag"><span class="icon">👥</span> Kelas ${d.kelas}</span>` : ''}
+          </div>
+          ${d.prodi ? `<span class="card-prodi">${d.prodi}</span>` : ''}
+          ${d.minggu ? `<span class="card-prodi" style="margin-left:4px;background:rgba(16,185,129,0.15);color:#6ee7b7">Minggu ${d.minggu}</span>` : ''}
+        </div>`;
+    });
+    html += '</div>';
+  });
+
+  document.getElementById('content').innerHTML = html;
+  document.getElementById('dataCount').textContent = `${filtered.length} jadwal`;
 }
 
-renderAll();
-loadFromSheet();
+// Render table view
+function renderTable() {
+  const filtered = getFilteredData();
+  if (filtered.length === 0) {
+    document.getElementById('content').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">Tidak ada jadwal ditemukan</div>
+      </div>`;
+    return;
+  }
+
+  // Sort by day then time
+  const sorted = [...filtered].sort((a, b) => {
+    const da = DAY_ORDER.indexOf(a.hari);
+    const db = DAY_ORDER.indexOf(b.hari);
+    if (da !== db) return (da === -1 ? 99 : da) - (db === -1 ? 99 : db);
+    return (a.jam || '').localeCompare(b.jam || '');
+  });
+
+  let html = '<div class="table-view"><table>';
+  html += '<thead><tr><th>Hari</th><th>Jam</th><th>Mata Kuliah</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th>Minggu</th></tr></thead><tbody>';
+  sorted.forEach(d => {
+    html += `<tr onclick='showDetail(${JSON.stringify(d).replace(/'/g,"&#39;")})' style="cursor:pointer">
+      <td>${d.hari}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td>
+      <td>${d.dosen}</td><td>${d.prodi || '-'}</td><td>${d.kelas || '-'}</td>
+      <td>${d.ruang || '-'}</td><td>${d.minggu || '-'}</td>
+    </tr>`;
+  });
+  html += '</tbody></table></div>';
+
+  document.getElementById('content').innerHTML = html;
+  document.getElementById('dataCount').textContent = `${filtered.length} jadwal`;
+}
+
+// Render based on current view
+function render() {
+  if (currentView === 'card') renderCards();
+  else renderTable();
+}
+
+// Set filter
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  render();
+}
+
+// Set view
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.view-btn').forEach(b => {
+    if ((view === 'card' && b.textContent.includes('Kartu')) ||
+        (view === 'table' && b.textContent.includes('Tabel'))) {
+      b.classList.add('active');
+    }
+  });
+  render();
+}
+
+// Show detail modal
+function showDetail(d) {
+  const modal = document.getElementById('modalContent');
+  modal.innerHTML = `
+    <h3>${d.mk}</h3>
+    <div class="modal-field"><div class="modal-label">Dosen</div><div class="modal-value">👩‍🏫 ${d.dosen}</div></div>
+    <div class="modal-field"><div class="modal-label">Hari & Jam</div><div class="modal-value">📅 ${d.hari}, ${d.jam}</div></div>
+    <div class="modal-field"><div class="modal-label">SKS</div><div class="modal-value">${d.sks} SKS</div></div>
+    <div class="modal-field"><div class="modal-label">Prodi</div><div class="modal-value">📚 ${d.prodi || '-'}</div></div>
+    <div class="modal-field"><div class="modal-label">Kelas</div><div class="modal-value">👥 ${d.kelas || '-'}</div></div>
+    <div class="modal-field"><div class="modal-label">Ruang</div><div class="modal-value">🏫 ${d.ruang || '-'}</div></div>
+    <div class="modal-field"><div class="modal-label">Minggu Mengajar</div><div class="modal-value">📆 ${d.minggu || '-'}</div></div>
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('show')">Tutup</button>
+  `;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('show');
+  }
+}
+
+// Get day emoji
+function getDayEmoji(day) {
+  const emojis = {'Senin':'🟢','Selasa':'🔵','Rabu':'🟡','Kamis':'🟠','Jumat':'🟣','Sabtu':'🔴','Minggu':'⚪'};
+  return emojis[day] || '📅';
+}
+
+// Toggle theme
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  const isLight = document.body.classList.contains('light');
+  document.querySelector('.theme-toggle').textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+// Share to WhatsApp
+function shareWA() {
+  const text = encodeURIComponent('📅 Jadwal Dosen BINGPRO — Politeknik Pertanian Negeri Payakumbuh\n\nAplikasi jadwal mengajar dosen BINGPRO.\n' + allData.length + ' jadwal tersedia.\n\n' + window.location.href);
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+}
+
+// Refresh data
+async function refreshData() {
+  document.getElementById('content').innerHTML = '<div class="loading"><div class="loading-spinner"></div><p style="margin-top:12px;font-size:0.8rem">Memuat ulang data...</p></div>';
+  await loadFromSheet();
+  renderFilters();
+  renderStats();
+  render();
+}
+
+// Search handler
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  searchQuery = e.target.value;
+  render();
+});
+
+// Init
+async function init() {
+  // Load theme
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light');
+    document.querySelector('.theme-toggle').textContent = '☀️';
+  }
+
+  await loadFromSheet();
+  renderFilters();
+  renderStats();
+  render();
+}
+
+init();
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(e => console.log('SW error:', e));
+}
 </script>
 </body>
 </html>
