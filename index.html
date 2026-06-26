@@ -424,7 +424,7 @@ function renderCards() {
     html += '<div class="cards">';
     entries.forEach((d, idx) => {
       const entryDate = getWeekDates(d.minggu, d.hari);
-      const ek = entryKey(d);
+      const ek = btoa(entryKey(d));
       html += `
         <div class="card">
           <div class="card-header">
@@ -442,7 +442,7 @@ function renderCards() {
             ${d.prodi ? `<span class="card-prodi">${d.prodi}</span>` : ''}
             ${d.minggu ? `<span class="card-prodi" style="background:rgba(16,185,129,0.12);color:#3a9d6d">Minggu ${d.minggu}</span>` : ''}
             <span style="flex:1"></span>
-            <button class="delete-btn" onclick="deleteEntry('${ek.replace(/'/g, "\\'")}')" title="Hapus jadwal">🗑️</button>
+            <button class="delete-btn" onclick="deleteEntry('${ek}')" title="Hapus jadwal">🗑️</button>
           </div>
         </div>`;
     });
@@ -477,12 +477,12 @@ function renderTable() {
   html += '<thead><tr><th>Hari</th><th>Tanggal</th><th>Jam</th><th>Mata Kuliah</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th>Minggu</th><th></th></tr></thead><tbody>';
   sorted.forEach((d, idx) => {
     const entryDate = getWeekDates(d.minggu, d.hari) || '-';
-    const ek = entryKey(d);
+    const ek = btoa(entryKey(d));
     html += `<tr>
       <td>${d.hari}</td><td>${entryDate}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td>
       <td>${d.dosen}</td><td>${d.prodi || '-'}</td><td>${d.kelas || '-'}</td>
       <td>${d.ruang || '-'}</td><td>${d.minggu || '-'}</td>
-      <td><button class="delete-btn" onclick="deleteEntry('${ek.replace(/'/g, "\\'")}')" title="Hapus">🗑️</button></td>
+      <td><button class="delete-btn" onclick="deleteEntry('${ek}')" title="Hapus">🗑️</button></td>
     </tr>`;
   });
   html += '</tbody></table></div>';
@@ -578,8 +578,10 @@ function entryKey(d) {
   return `${d.dosen}|${d.hari}|${d.jam}|${d.mk}`;
 }
 
-function deleteEntry(key) {
-  if (!key) return;
+function deleteEntry(encoded) {
+  if (!encoded) return;
+  let key;
+  try { key = atob(encoded); } catch(e) { return; }
   const parts = key.split('|');
   const mk = parts[3] || '';
   const dosen = parts[0] || '';
