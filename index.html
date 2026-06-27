@@ -67,6 +67,27 @@ body{font-family:'Inter',sans-serif;background:#e8f0fa;min-height:100vh;color:#1
 .card-btn-del{background:#fee2e2;color:#dc2626}
 .card-btn-del:hover{background:#fecaca}
 
+/* GRID VIEW */
+.grid-wrap{padding:0 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.grid-table{width:100%;border-collapse:collapse;font-size:0.65rem;background:#fff;border-radius:10px;overflow:hidden;min-width:600px}
+.grid-table th{background:#3a7bc8;color:#fff;padding:8px 6px;text-align:center;font-weight:600;position:sticky;top:0;z-index:2;white-space:nowrap}
+.grid-table th:first-child{text-align:left;min-width:120px;position:sticky;left:0;z-index:3;background:#2d6aa0}
+.grid-table td{padding:6px;border-bottom:1px solid #e8f0fa;border-right:1px solid #e8f0fa;text-align:center;vertical-align:top;font-size:0.6rem;min-width:100px}
+.grid-table td:first-child{font-weight:700;color:#3a7bc8;text-align:left;position:sticky;left:0;background:#fff;z-index:1;white-space:nowrap;padding-left:8px;border-right:2px solid #b8cfe8}
+.grid-table tr:hover td{background:rgba(58,123,200,0.04)}
+.grid-table tr:hover td:first-child{background:rgba(58,123,200,0.08)}
+.grid-cell-filled{background:rgba(58,123,200,0.08)!important;border-radius:6px;padding:4px!important}
+.grid-cell-empty{color:#ccc;font-style:italic}
+.grid-mk{font-weight:600;color:#1a2332;display:block;margin-bottom:2px}
+.grid-jam{color:#5a8ab8;font-size:0.55rem}
+.grid-ruang{color:#3a9d6d;font-size:0.55rem}
+.grid-summary{padding:8px 16px;display:flex;gap:8px;flex-wrap:wrap}
+.grid-summary-card{background:#fff;border-radius:10px;padding:10px 14px;border:1px solid #c4d8f0;flex:1;min-width:140px}
+.grid-summary-title{font-size:0.65rem;color:#5a8ab8;font-weight:600;margin-bottom:4px}
+.grid-summary-value{font-size:1rem;font-weight:800;color:#3a7bc8}
+.grid-free-badge{display:inline-block;background:rgba(239,68,68,0.1);color:#ef4444;padding:2px 6px;border-radius:6px;font-size:0.55rem;font-weight:600}
+.grid-busy-badge{display:inline-block;background:rgba(16,185,129,0.1);color:#10b981;padding:2px 6px;border-radius:6px;font-size:0.55rem;font-weight:600}
+
 /* DAY SECTION */
 .day-section{padding:12px 16px 0}
 .day-title{font-size:0.8rem;font-weight:700;color:#3a7bc8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
@@ -141,6 +162,12 @@ body.dark .filter-btn.active{background:#3a7bc8;border-color:#3a7bc8;color:#fff}
 body.dark .theme-toggle{background:#15202e;border-color:#223348;color:#5a9ad8}
 body.dark .view-btn{border-color:#223348;background:transparent;color:#4a7a9e}
 body.dark .view-btn.active{background:#3a7bc8;color:#fff}
+body.dark .grid-table{background:#1a2332}
+body.dark .grid-table td{border-color:#223348;color:#c4d8f0}
+body.dark .grid-table td:first-child{background:#1a2332;border-color:#223348}
+body.dark .grid-cell-filled{background:rgba(58,123,200,0.15)!important}
+body.dark .grid-mk{color:#e8f0fa}
+body.dark .grid-summary-card{background:#1a2332;border-color:#223348}
 body.dark .table-wrap th{background:#1e3a5f}
 body.dark .table-wrap td{border-color:#223348;color:#c8d8ec}
 body.dark .table-wrap tr:hover td{background:rgba(58,123,200,0.08)}
@@ -184,6 +211,7 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
 <div class="view-toggle">
   <button class="view-btn active" onclick="setView('card')">📋 Kartu</button>
   <button class="view-btn" onclick="setView('table')">📊 Tabel</button>
+  <button class="view-btn" onclick="setView('grid')">🔲 Grid Rekap</button>
 </div>
 
 <div class="stats" id="statsRow"></div>
@@ -536,9 +564,87 @@ function renderTable() {
   document.getElementById('content').innerHTML = html;
 }
 
-function render() { currentView==='card' ? renderCards() : renderTable(); }
+function renderGrid() {
+  const filtered = getFilteredData();
+  if (!filtered.length) {
+    document.getElementById('content').innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div class="empty-text">Belum ada jadwal</div></div>';
+    return;
+  }
+  const DAYS = ['Senin','Selasa','Rabu','Kamis','Jumat'];
+  const dosens = [...new Set(filtered.map(d=>d.dosen).filter(Boolean))].sort();
+  
+  // Build grid data: grid[dosen][day] = [entries]
+  const grid = {};
+  dosens.forEach(d => { grid[d] = {}; DAYS.forEach(day => { grid[d][day] = []; }); });
+  filtered.forEach(d => {
+    if (d.dosen && grid[d.dosen] && d.hari && grid[d.dosen][d.hari]) {
+      grid[d.dosen][d.hari].push(d);
+    }
+  });
+  
+  // Summary stats
+  let totalSlots = dosens.length * DAYS.length;
+  let filledSlots = 0;
+  let freeSlots = 0;
+  dosens.forEach(dn => {
+    DAYS.forEach(day => {
+      if (grid[dn][day].length > 0) filledSlots++;
+      else freeSlots++;
+    });
+  });
+  
+  let html = '<div class="grid-summary">';
+  html += `<div class="grid-summary-card"><div class="grid-summary-title">Total Dosen</div><div class="grid-summary-value">${dosens.length}</div></div>`;
+  html += `<div class="grid-summary-card"><div class="grid-summary-title">Slot Terisi</div><div class="grid-summary-value" style="color:#10b981">${filledSlots}</div></div>`;
+  html += `<div class="grid-summary-card"><div class="grid-summary-title">Slot Kosong</div><div class="grid-summary-value" style="color:#ef4444">${freeSlots}</div></div>`;
+  html += `<div class="grid-summary-card"><div class="grid-summary-title">Persentase Terisi</div><div class="grid-summary-value">${totalSlots?Math.round(filledSlots/totalSlots*100):0}%</div></div>`;
+  html += '</div>';
+  
+  html += '<div class="grid-wrap"><table class="grid-table"><thead><tr><th>Dosen</th>';
+  DAYS.forEach(day => { html += `<th>${day}</th>`; });
+  html += '<th>Kosong</th></tr></thead><tbody>';
+  
+  dosens.forEach(dn => {
+    let freeDays = [];
+    html += `<tr><td>${dn.split(' ').slice(0,2).join(' ')}</td>`;
+    DAYS.forEach(day => {
+      const entries = grid[dn][day];
+      if (entries.length > 0) {
+        html += '<td class="grid-cell-filled">';
+        entries.forEach(e => {
+          html += `<span class="grid-mk">${e.mk}</span>`;
+          html += `<span class="grid-jam">${e.jam}</span>`;
+          if (e.ruang) html += `<span class="grid-ruang"> ${e.ruang}</span>`;
+        });
+        html += '</td>';
+      } else {
+        html += '<td class="grid-cell-empty">-</td>';
+        freeDays.push(day);
+      }
+    });
+    // Free days summary
+    if (freeDays.length > 0) {
+      html += `<td><span class="grid-free-badge">${freeDays.length} hari kosong</span><br><span style="font-size:0.5rem;color:#888">${freeDays.join(', ')}</span></td>`;
+    } else {
+      html += '<td><span class="grid-busy-badge">Penuh</span></td>';
+    }
+    html += '</tr>';
+  });
+  
+  html += '</tbody></table></div>';
+  
+  // Legend
+  html += '<div style="padding:8px 16px;display:flex;gap:16px;font-size:0.6rem;color:#5a8ab8">';
+  html += '<span>🟢 <b>Terisi</b> = Ada jadwal mengajar</span>';
+  html += '<span>⚪ <b>Kosong</b> = Tidak ada jadwal (slot tersedia)</span>';
+  html += '</div>';
+  
+  document.getElementById('content').innerHTML = html;
+}
+
+function render() { currentView==='card' ? renderCards() : currentView==='table' ? renderTable() : renderGrid(); }
 function setFilter(f, btn) { currentFilter=f; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); if(btn)btn.classList.add('active'); render(); }
-function setView(v) { currentView=v; document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.view-btn').forEach(b=>{if((v==='card'&&b.textContent.includes('Kartu'))||(v==='table'&&b.textContent.includes('Tabel')))b.classList.add('active')}); render(); }
+function setView(v) { currentView=v; document.querySelectorAll('.view-btn').forEach(b=>b.classList.remove('active')); document.querySelectorAll('.view-btn').forEach(b=>{if((v==='card'&&b.textContent.includes('Kartu'))||(v==='table'&&b.textContent.includes('Tabel'))||(v==='grid'&&b.textContent.includes('Grid')))b.classList.add('active')}); render(); }
 
 // === ADD/EDIT FORM ===
 function openAddForm() {
