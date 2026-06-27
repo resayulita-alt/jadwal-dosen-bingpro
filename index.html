@@ -240,8 +240,8 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
         <input type="text" class="form-input" id="fRuang" placeholder="R.14, Lab Kom">
       </div>
       <div class="form-group">
-        <label class="form-label">Minggu</label>
-        <input type="text" class="form-input" id="fMinggu" placeholder="1-8, 16, 17">
+        <label class="form-label">Tanggal</label>
+        <input type="date" class="form-input" id="fTanggal">
       </div>
     </div>
     <div class="form-group">
@@ -289,9 +289,7 @@ const SHEET_ID = '1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw';
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Form+Responses+1`;
 
 const DAY_ORDER = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
-const SEMESTER_START = new Date(2026, 2, 2);
 const MONTH_NAMES = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-const DAY_TO_OFFSET = {'Senin':0,'Selasa':1,'Rabu':2,'Kamis':3,'Jumat':4,'Sabtu':5,'Minggu':6};
 
 let allData = [];
 let currentFilter = 'all';
@@ -300,17 +298,18 @@ let searchQuery = '';
 let deleteIdx = -1;
 
 // === DATE HELPERS ===
-function getWeekDates(minggu, hari) {
-  if (!minggu || !hari) return '';
-  const weekNum = parseInt(minggu.toString().split('-')[0]);
-  if (isNaN(weekNum) || weekNum < 1) return '';
-  const dayOffset = DAY_TO_OFFSET[hari];
-  if (dayOffset === undefined) return '';
-  const monday = new Date(SEMESTER_START);
-  monday.setDate(monday.getDate() + (weekNum - 1) * 7);
-  const d = new Date(monday);
-  d.setDate(d.getDate() + dayOffset);
+const DAY_NAMES_SHORT = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  if (isNaN(d.getTime())) return '';
   return `${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
+}
+function formatDateWithDay(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  if (isNaN(d.getTime())) return '';
+  return `${DAY_NAMES_SHORT[d.getDay()]}, ${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
 }
 
 // === STORAGE ===
@@ -363,7 +362,7 @@ async function loadFromSheet() {
     if (rows.length < 1) throw new Error('No data');
 
     const headers = parseCSVRow(rows[0]);
-    const FIELD_NAMES = ['Timestamp','Nama Dosen','Hari','Jam Mengajar','Mata Kuliah','SKS','Prodi','Kelas','Ruang Kelas','Minggu Mengajar','Column 11'];
+    const FIELD_NAMES = ['Timestamp','Nama Dosen','Hari','Jam Mengajar','Mata Kuliah','SKS','Prodi','Kelas','Ruang Kelas','Tanggal','Column 11'];
 
     function parseMergedLabel(label, fieldName) {
       if (!label || !fieldName) return [];
@@ -381,7 +380,7 @@ async function loadFromSheet() {
     const prodiList = parseMergedLabel(headers[6], FIELD_NAMES[6]);
     const kelasList = parseMergedLabel(headers[7], FIELD_NAMES[7]);
     const ruangList = parseMergedLabel(headers[8], FIELD_NAMES[8]);
-    const mingguList = parseMergedLabel(headers[9], FIELD_NAMES[9]);
+    const tanggalList = parseMergedLabel(headers[9], FIELD_NAMES[9]);
 
     const count = Math.min(dosenNames.length, hariList.length, jamList.length, mkList.length, sksList.length);
     const sheetData = [];
@@ -392,7 +391,7 @@ async function loadFromSheet() {
       sheetData.push({
         dosen: dosenNames[i]||'', hari: hariList[i]||'', jam: jamList[i]||'',
         mk, sks: sksList[i]||'2', prodi: prodiList[i]||'',
-        kelas: kelasList[i]||'', ruang: ruangList[i]||'', minggu: mingguList[i]||''
+        kelas: kelasList[i]||'', ruang: ruangList[i]||'', tanggal: tanggalList[i]||''
       });
     }
 
@@ -404,7 +403,7 @@ async function loadFromSheet() {
       sheetData.push({
         dosen: cols[1]||'', hari: cols[2]||'', jam: cols[3]||'',
         mk, sks: cols[5]||'2', prodi: cols[6]||cols[10]||'',
-        kelas: cols[7]||'', ruang: cols[8]||'', minggu: cols[9]||''
+        kelas: cols[7]||'', ruang: cols[8]||'', tanggal: cols[9]||''
       });
     }
 
@@ -487,13 +486,13 @@ function renderCards() {
   let html = '';
   sortedDays.forEach(day => {
     const entries = byDay[day].sort((a,b) => (a.jam||'').localeCompare(b.jam||''));
-    const sampleM = entries[0] ? entries[0].minggu : '';
-    const dateStr = getWeekDates(sampleM, day);
-    const label = dateStr ? `${getDayEmoji(day)} ${day}, ${dateStr}` : `${getDayEmoji(day)} ${day}`;
+    const sampleT = entries[0] ? (entries[0].tanggal || entries[0].minggu) : '';
+    const dateStr = formatDateWithDay(sampleT);
+    const label = dateStr ? `${getDayEmoji(day)} ${day} — ${dateStr}` : `${getDayEmoji(day)} ${day}`;
     html += `<div class="day-section"><div class="day-title">${label}</div></div><div class="cards">`;
     entries.forEach(d => {
       const idx = allData.indexOf(d);
-      const ed = getWeekDates(d.minggu, d.hari);
+      const ed = formatDate(d.tanggal || d.minggu);
       html += `<div class="card">
         <div class="card-header"><span class="card-mk">${d.mk}</span><span class="card-sks">${d.sks} SKS</span></div>
         <div class="card-dosen">👩‍🏫 ${d.dosen}</div>
@@ -505,7 +504,7 @@ function renderCards() {
         </div>
         <div style="display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap">
           ${d.prodi?`<span class="card-prodi">${d.prodi}</span>`:''}
-          ${d.minggu?`<span class="card-prodi" style="background:rgba(16,185,129,0.12);color:#3a9d6d">Minggu ${d.minggu}</span>`:''}
+          ${(d.tanggal||d.minggu)?`<span class="card-prodi" style="background:rgba(16,185,129,0.12);color:#3a9d6d">📅 ${formatDate(d.tanggal || d.minggu)}</span>`:''}
           <span style="flex:1"></span>
           <button class="card-btn card-btn-edit" onclick="openEditForm(${idx})">✏️ Edit</button>
           <button class="card-btn card-btn-del" onclick="openDelete(${idx})">🗑️</button>
@@ -527,11 +526,11 @@ function renderTable() {
     const d = (DAY_ORDER.indexOf(a.hari)+1||99)-(DAY_ORDER.indexOf(b.hari)+1||99);
     return d || (a.jam||'').localeCompare(b.jam||'');
   });
-  let html = '<div class="table-wrap"><table><thead><tr><th>Hari</th><th>Tgl</th><th>Jam</th><th>MK</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th>Mg</th><th></th></tr></thead><tbody>';
+  let html = '<div class="table-wrap"><table><thead><tr><th>Hari</th><th>Tanggal</th><th>Jam</th><th>MK</th><th>SKS</th><th>Dosen</th><th>Prodi</th><th>Kelas</th><th>Ruang</th><th></th></tr></thead><tbody>';
   sorted.forEach(d => {
     const idx = allData.indexOf(d);
-    const ed = getWeekDates(d.minggu, d.hari)||'-';
-    html += `<tr><td>${d.hari}</td><td>${ed}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td><td>${d.dosen}</td><td>${d.prodi||'-'}</td><td>${d.kelas||'-'}</td><td>${d.ruang||'-'}</td><td>${d.minggu||'-'}</td><td><button class="card-btn card-btn-edit" onclick="openEditForm(${idx})" style="padding:3px 6px;font-size:0.6rem">✏️</button> <button class="card-btn card-btn-del" onclick="openDelete(${idx})" style="padding:3px 6px;font-size:0.6rem">🗑️</button></td></tr>`;
+    const tgl = formatDateWithDay(d.tanggal || d.minggu)||'-';
+    html += `<tr><td>${d.hari}</td><td>${tgl}</td><td>${d.jam}</td><td><strong>${d.mk}</strong></td><td>${d.sks}</td><td>${d.dosen}</td><td>${d.prodi||'-'}</td><td>${d.kelas||'-'}</td><td>${d.ruang||'-'}</td><td><button class="card-btn card-btn-edit" onclick="openEditForm(${idx})" style="padding:3px 6px;font-size:0.6rem">✏️</button> <button class="card-btn card-btn-del" onclick="openDelete(${idx})" style="padding:3px 6px;font-size:0.6rem">🗑️</button></td></tr>`;
   });
   html += '</tbody></table></div>';
   document.getElementById('content').innerHTML = html;
@@ -552,7 +551,7 @@ function openAddForm() {
   document.getElementById('fHari').value = 'Senin';
   document.getElementById('fJam').value = '';
   document.getElementById('fRuang').value = '';
-  document.getElementById('fMinggu').value = '';
+  document.getElementById('fTanggal').value = '';
   document.getElementById('fProdi').value = '';
   updateDosenList();
   document.getElementById('formModal').classList.add('show');
@@ -570,7 +569,7 @@ function openEditForm(idx) {
   document.getElementById('fHari').value = d.hari;
   document.getElementById('fJam').value = d.jam;
   document.getElementById('fRuang').value = d.ruang;
-  document.getElementById('fMinggu').value = d.minggu;
+  document.getElementById('fTanggal').value = d.tanggal || d.minggu || '';
   document.getElementById('fProdi').value = d.prodi;
   updateDosenList();
   document.getElementById('formModal').classList.add('show');
@@ -594,7 +593,7 @@ function saveEntry() {
     kelas: document.getElementById('fKelas').value.trim(),
     dosen, hari, jam,
     ruang: document.getElementById('fRuang').value.trim(),
-    minggu: document.getElementById('fMinggu').value.trim(),
+    tanggal: document.getElementById('fTanggal').value,
     prodi: document.getElementById('fProdi').value
   };
   const idx = parseInt(document.getElementById('editIndex').value);
