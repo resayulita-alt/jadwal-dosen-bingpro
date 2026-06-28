@@ -307,7 +307,16 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
 
 <script>
 const STORAGE_KEY = 'jadwalDosenBINGPRO';
+const SHEET_DATA_KEY = 'jadwalSheetData';
+const LOCAL_DATA_KEY = 'jadwalLocalData';
 const DELETED_KEY = 'jadwalDosenDELETED';
+
+// Sheet data (from Google Sheet) - read only, never modified locally
+let sheetData = [];
+// Local data (added by user) - never overwritten by sync
+let localData = [];
+// Combined for display
+let allData = [];
 
 function getDeletedKeys() {
   try { return JSON.parse(localStorage.getItem(DELETED_KEY) || '[]'); } catch(e) { return []; }
@@ -318,18 +327,34 @@ function addDeletedKey(key) {
 }
 function clearDeletedKeys() {
   localStorage.removeItem(DELETED_KEY);
-  showToast('♻️ Daftar hapus direset — data bisa muncul lagi saat sync');
+  rebuildAllData();
+  showToast('♻️ Daftar hapus direset — data yang disembunyikan muncul lagi');
 }
 function getDeletedCount() {
   return getDeletedKeys().length;
 }
 
 function resetData() {
-  if (!confirm('Hapus semua data lokal dan sync ulang dari Google Sheet?')) return;
-  localStorage.removeItem(STORAGE_KEY);
+  if (!confirm('Hapus SEMUA data lokal + daftar hapus, lalu sync ulang dari Google Sheet?')) return;
+  localStorage.removeItem(SHEET_DATA_KEY);
+  localStorage.removeItem(LOCAL_DATA_KEY);
   localStorage.removeItem(DELETED_KEY);
+  localStorage.removeItem(STORAGE_KEY); // clear legacy
+  sheetData = [];
+  localData = [];
   allData = [];
   loadFromSheet();
+}
+
+// Build allData from sheetData + localData, minus deleted
+function rebuildAllData() {
+  const deletedKeys = new Set(getDeletedKeys());
+  const combined = [...sheetData, ...localData];
+  allData = combined.filter(d => !deletedKeys.has(entryKey(d)));
+  saveData();
+  renderFilters();
+  renderStats();
+  render();
 }
 const SHEET_ID = '1rWnlceZUFGOVCv1pkPCwAqH8Q9ZeYxWYY_C21Ymmqqw';
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Form+Responses+1`;
@@ -360,16 +385,38 @@ function formatDateWithDay(dateStr) {
 
 // === STORAGE ===
 function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(allData));
+  localStorage.setItem(SHEET_DATA_KEY, JSON.stringify(sheetData));
+  localStorage.setItem(LOCAL_DATA_KEY, JSON.stringify(localData));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(allData)); // legacy compat
   updateStorageInfo();
 }
 
 function loadData() {
+  // Try new format first
+  const sSheet = localStorage.getItem(SHEET_DATA_KEY);
+  const sLocal = localStorage.getItem(LOCAL_DATA_KEY);
+  if (sSheet || sLocal) {
+    try {
+      sheetData = sSheet ? JSON.parse(sSheet) : [];
+      localData = sLocal ? JSON.parse(sLocal) : [];
+      const deletedKeys = new Set(getDeletedKeys());
+      allData = [...sheetData, ...localData].filter(d => !deletedKeys.has(entryKey(d)));
+      if (allData.length > 0) return true;
+    } catch(e) {}
+  }
+  // Fallback: legacy format (single allData array)
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
     try {
-      allData = JSON.parse(saved);
-      if (allData.length > 0) return true;
+      const legacy = JSON.parse(saved);
+      if (legacy.length > 0) {
+        // Treat all legacy data as local data (safe)
+        localData = legacy;
+        sheetData = [];
+        allData = [...legacy];
+        saveData(); // migrate to new format
+        return true;
+      }
     } catch(e) {}
   }
   return false;
@@ -429,12 +476,12 @@ async function loadFromSheet() {
     const tanggalList = parseMergedLabel(headers[9], FIELD_NAMES[9]);
 
     const count = Math.min(dosenNames.length, hariList.length, jamList.length, mkList.length, sksList.length);
-    const sheetData = [];
+    const parsed = [];
 
     for (let i = 0; i < count; i++) {
       const mk = mkList[i] || '';
       if (!mk || mk.toLowerCase() === 'mata kuliah') continue;
-      sheetData.push({
+      parsed.push({
         dosen: dosenNames[i]||'', hari: hariList[i]||'', jam: jamList[i]||'',
         mk, sks: sksList[i]||'2', prodi: prodiList[i]||'',
         kelas: kelasList[i]||'', ruang: ruangList[i]||'', tanggal: tanggalList[i]||''
@@ -446,29 +493,20 @@ async function loadFromSheet() {
       if (cols.length < 5 || !cols[1]) continue;
       const mk = cols[4] || '';
       if (!mk || mk.toLowerCase() === 'mata kuliah') continue;
-      sheetData.push({
+      parsed.push({
         dosen: cols[1]||'', hari: cols[2]||'', jam: cols[3]||'',
         mk, sks: cols[5]||'2', prodi: cols[6]||cols[10]||'',
         kelas: cols[7]||'', ruang: cols[8]||'', tanggal: cols[9]||''
       });
     }
 
-    if (sheetData.length > 0) {
-      // Filter out deleted entries
-      const deletedKeys = new Set(getDeletedKeys());
-      const filteredSheet = sheetData.filter(d => !deletedKeys.has(entryKey(d)));
-      // Merge: keep local entries not in sheet, add sheet entries
-      const localKeys = new Set(allData.map(d => entryKey(d)));
-      const sheetKeys = new Set(filteredSheet.map(d => entryKey(d)));
-      // Keep local-only entries (but not deleted ones)
-      const localOnly = allData.filter(d => !sheetKeys.has(entryKey(d)) && !deletedKeys.has(entryKey(d)));
-      allData = [...filteredSheet, ...localOnly];
-      saveData();
-      const blocked = sheetData.length - filteredSheet.length;
-      showToast(`✅ ${filteredSheet.length} jadwal dari Sheet${blocked ? ' (' + blocked + ' dihapus)' : ''}`);
-      renderFilters();
-      renderStats();
-      render();
+    if (parsed.length > 0) {
+      // Sheet data replaces old sheet data ONLY (not local data)
+      sheetData = parsed;
+      // Rebuild allData: sheetData + localData - deleted
+      rebuildAllData();
+      const deletedCount = parsed.length - sheetData.filter(d => !getDeletedKeys().includes(entryKey(d))).length;
+      showToast(`✅ ${parsed.length} jadwal dari Sheet`);
       return true;
     }
   } catch(e) {
@@ -731,17 +769,26 @@ function saveEntry() {
   };
   const idx = parseInt(document.getElementById('editIndex').value);
   if (idx >= 0) {
-    allData[idx] = entry;
+    // Editing existing entry
+    const oldEntry = allData[idx];
+    const oldKey = entryKey(oldEntry);
+    // Check if it's in sheetData or localData
+    const localIdx = localData.findIndex(d => entryKey(d) === oldKey);
+    if (localIdx >= 0) {
+      localData[localIdx] = entry;
+    } else {
+      // It's from sheet - override with local version
+      localData.push(entry);
+    }
     showToast('✅ Jadwal diperbarui');
   } else {
-    allData.push(entry);
+    // Adding new entry → goes to localData
+    localData.push(entry);
     showToast('✅ Jadwal ditambahkan');
   }
   saveData();
+  rebuildAllData();
   closeForm();
-  renderFilters();
-  renderStats();
-  render();
 }
 
 // === DELETE ===
@@ -757,12 +804,11 @@ function confirmDelete() {
   if (deleteIdx >= 0 && deleteIdx < allData.length) {
     const deleted = allData[deleteIdx];
     addDeletedKey(entryKey(deleted));
-    allData.splice(deleteIdx, 1);
-    saveData();
+    // Also remove from localData if it's there
+    const localIdx = localData.findIndex(d => entryKey(d) === entryKey(deleted));
+    if (localIdx >= 0) localData.splice(localIdx, 1);
     showToast('🗑️ Jadwal dihapus');
-    renderFilters();
-    renderStats();
-    render();
+    rebuildAllData();
   }
   closeDelete();
 }
