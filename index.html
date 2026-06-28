@@ -196,6 +196,7 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
     <button class="header-btn" onclick="exportData()">📤 Export</button>
     <button class="header-btn" onclick="document.getElementById('importFile').click()">📥 Import</button>
     <button class="header-btn" onclick="loadFromSheet()">🔄 Sync Sheet</button>
+    <button class="header-btn" onclick="if(confirm('Reset daftar hapus? Data yang pernah dihapus akan muncul lagi saat sync.')){clearDeletedKeys();loadFromSheet();}">♻️ Pulihkan</button>
     <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
     <button class="header-btn" onclick="resetData()">🔄 Reset</button>
   </div>
@@ -314,6 +315,13 @@ function getDeletedKeys() {
 function addDeletedKey(key) {
   const dk = getDeletedKeys();
   if (!dk.includes(key)) { dk.push(key); localStorage.setItem(DELETED_KEY, JSON.stringify(dk)); }
+}
+function clearDeletedKeys() {
+  localStorage.removeItem(DELETED_KEY);
+  showToast('♻️ Daftar hapus direset — data bisa muncul lagi saat sync');
+}
+function getDeletedCount() {
+  return getDeletedKeys().length;
 }
 
 function resetData() {
