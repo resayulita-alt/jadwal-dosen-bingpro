@@ -408,7 +408,7 @@ async function loadFromSheet() {
     if (rows.length < 1) throw new Error('No data');
 
     const headers = parseCSVRow(rows[0]);
-    const FIELD_NAMES = ['Timestamp','Nama Dosen','Hari','Jam Mengajar','Mata Kuliah','SKS','Prodi','Kelas','Ruang Kelas','Tanggal','Column 11'];
+    const FIELD_NAMES = ['Timestamp','Nama Dosen','Hari','Jam Mengajar','Mata Kuliah','SKS','Prodi','Kelas','Ruang Kelas','Minggu Mengajar','Column 11'];
 
     function parseMergedLabel(label, fieldName) {
       if (!label || !fieldName) return [];
@@ -820,19 +820,6 @@ document.getElementById('searchInput').addEventListener('input', e => { searchQu
 
 // === INIT ===
 async function init() {
-  // One-time migration: clear old data (entry key format changed to include tanggal)
-  const oldDeleted = localStorage.getItem(DELETED_KEY);
-  if (oldDeleted) {
-    try {
-      const arr = JSON.parse(oldDeleted);
-      const hasOldFormat = arr.some(k => k.split('|').length === 4);
-      if (hasOldFormat) {
-        localStorage.removeItem(DELETED_KEY);
-        localStorage.removeItem(STORAGE_KEY);
-        console.log('Migrated: cleared old data (key format changed to include tanggal)');
-      }
-    } catch(e) {}
-  }
   if (localStorage.getItem('jadwalTheme') === 'dark') {
     document.body.classList.add('dark');
     document.querySelector('.theme-toggle').textContent = '☀️';
