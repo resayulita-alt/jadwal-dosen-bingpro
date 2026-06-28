@@ -369,17 +369,46 @@ let searchQuery = '';
 let deleteIdx = -1;
 
 // === DATE HELPERS ===
+const SEMESTER_START = new Date('2026-03-02'); // Semester mulai 2 Maret 2026
 const DAY_NAMES_SHORT = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  if (isNaN(d.getTime())) return '';
+
+function weekToDate(weekNum) {
+  // Convert week number to actual date (week 1 starts at semester start)
+  const d = new Date(SEMESTER_START);
+  d.setDate(d.getDate() + (weekNum - 1) * 7);
+  return d;
+}
+
+function parseTanggal(raw) {
+  // Parse tanggal value: could be "2026-06-18", "18", "16", etc.
+  if (!raw) return null;
+  raw = raw.trim();
+  if (!raw) return null;
+  // Full date string
+  if (raw.includes('-') || raw.includes('/')) {
+    const d = new Date(raw + 'T00:00:00');
+    if (!isNaN(d.getTime())) return d;
+  }
+  // Short number: could be week number (16-20) or day of month (1-31)
+  const num = parseInt(raw);
+  if (isNaN(num)) return null;
+  if (num >= 14 && num <= 25) {
+    // Likely week number (semester weeks)
+    return weekToDate(num);
+  }
+  // Otherwise treat as day of month in current month
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), num);
+}
+
+function formatDate(raw) {
+  const d = parseTanggal(raw);
+  if (!d) return '';
   return `${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
 }
-function formatDateWithDay(dateStr) {
-  if (!dateStr) return '';
-  const d = new Date(dateStr + 'T00:00:00');
-  if (isNaN(d.getTime())) return '';
+function formatDateWithDay(raw) {
+  const d = parseTanggal(raw);
+  if (!d) return '';
   return `${DAY_NAMES_SHORT[d.getDay()]}, ${d.getDate()} ${MONTH_NAMES[d.getMonth()]}`;
 }
 
