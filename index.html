@@ -306,10 +306,20 @@ body.dark .header-btn{border-color:rgba(255,255,255,0.2);background:rgba(255,255
 
 <script>
 const STORAGE_KEY = 'jadwalDosenBINGPRO';
+const DELETED_KEY = 'jadwalDosenDELETED';
+
+function getDeletedKeys() {
+  try { return JSON.parse(localStorage.getItem(DELETED_KEY) || '[]'); } catch(e) { return []; }
+}
+function addDeletedKey(key) {
+  const dk = getDeletedKeys();
+  if (!dk.includes(key)) { dk.push(key); localStorage.setItem(DELETED_KEY, JSON.stringify(dk)); }
+}
 
 function resetData() {
   if (!confirm('Hapus semua data lokal dan sync ulang dari Google Sheet?')) return;
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(DELETED_KEY);
   allData = [];
   loadFromSheet();
 }
@@ -436,14 +446,18 @@ async function loadFromSheet() {
     }
 
     if (sheetData.length > 0) {
+      // Filter out deleted entries
+      const deletedKeys = new Set(getDeletedKeys());
+      const filteredSheet = sheetData.filter(d => !deletedKeys.has(entryKey(d)));
       // Merge: keep local entries not in sheet, add sheet entries
       const localKeys = new Set(allData.map(d => entryKey(d)));
-      const sheetKeys = new Set(sheetData.map(d => entryKey(d)));
-      // Keep local-only entries
-      const localOnly = allData.filter(d => !sheetKeys.has(entryKey(d)));
-      allData = [...sheetData, ...localOnly];
+      const sheetKeys = new Set(filteredSheet.map(d => entryKey(d)));
+      // Keep local-only entries (but not deleted ones)
+      const localOnly = allData.filter(d => !sheetKeys.has(entryKey(d)) && !deletedKeys.has(entryKey(d)));
+      allData = [...filteredSheet, ...localOnly];
       saveData();
-      showToast(`✅ ${sheetData.length} jadwal dari Sheet`);
+      const blocked = sheetData.length - filteredSheet.length;
+      showToast(`✅ ${filteredSheet.length} jadwal dari Sheet${blocked ? ' (' + blocked + ' dihapus)' : ''}`);
       renderFilters();
       renderStats();
       render();
@@ -728,6 +742,8 @@ function openDelete(idx) {
 function closeDelete() { document.getElementById('deleteModal').classList.remove('show'); deleteIdx=-1; }
 function confirmDelete() {
   if (deleteIdx >= 0 && deleteIdx < allData.length) {
+    const deleted = allData[deleteIdx];
+    addDeletedKey(entryKey(deleted));
     allData.splice(deleteIdx, 1);
     saveData();
     showToast('🗑️ Jadwal dihapus');
